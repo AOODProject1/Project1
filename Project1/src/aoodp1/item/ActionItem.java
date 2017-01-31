@@ -2,6 +2,7 @@ package aoodp1.item;
 
 import java.util.ArrayList;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 public class ActionItem {
 	private String s; //Name
@@ -36,6 +37,9 @@ public class ActionItem {
 			out += item + "\n";
 		}
 		return out;
+	}
+	public void changePriorityDate(LocalDate d,Priority p) {
+		dates[p.ordinal()] = new PriorityDate(d,p);
 	}
 	public String getDates() {
 		String out="Dates at which the priority will change:\n";

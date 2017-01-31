@@ -1,7 +1,11 @@
 package aoodp1.item;
 
 import java.time.LocalDate;
-
+/**
+ * Internal class to represent a date at which an ActionItem changes priority
+ * @author Morgan
+ *
+ */
 public class PriorityDate {
 	private LocalDate dateToChangeAt;
 	private Priority priorityToChangeTo;
