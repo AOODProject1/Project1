@@ -7,6 +7,7 @@ import java.time.LocalDate;
 public class ActionItem {
 	private String s; //Name
 	private Priority p;
+	private String comment;
 	private ArrayList<String> history;
 	private PriorityDate dates[];
 	public ActionItem(String s) {
@@ -27,16 +28,40 @@ public class ActionItem {
 	public Priority getPriority() {
 		return p;
 	}
+	/**
+	 * Checks the dates to make sure the dates specified in dates[] haven't past.
+	 */
+	public void validateDates() {
+		for (int i=0;i<3;i++) {
+			if (dates[i]==null) continue;
+			if (dates[i].getDate().isBefore(LocalDate.now())) {
+				if (p.ordinal() < i) {
+					p = Priority.values()[i];
+				}
+			}
+		}
+	}
 	public void addHistory(String message) {
 		String time = new Timestamp(System.currentTimeMillis()).toString();
 		history.add(0, "[" + time.substring(0, time.indexOf(".")) + "] " + message);
 	}
+	public void changeName(String name) {
+		addHistory("Name changed from \"" + s + "\" to \"" +  name + "\"");
+		s=name;
+	}
+	public void changeComment(String comment) {
+		addHistory("Comment changed from \"" + this.comment + "\" to \"" + comment + "\"");
+		this.comment=comment;
+	}
 	public String getHistory() {
 		String out="";
-		for (String item : history.toArray(new String[0])) {
+		for (String item : (String[])history.toArray()) {
 			out += item + "\n";
 		}
 		return out;
+	}
+	public String[] getHistoryAsArray() {
+		return (String[])history.toArray();
 	}
 	public void changePriorityDate(LocalDate d,Priority p) {
 		dates[p.ordinal()] = new PriorityDate(d,p);
@@ -49,7 +74,9 @@ public class ActionItem {
 		return out;
 	}
 	public String toString() {
-		return getName() + "\nPriority: " + p.toString() +"\n"+ getDates() +"\n" + getHistory();
-		
+		return getHeader() +"\n" + getHistory();	
 	}
+	public String getHeader() {
+		return getName() + "\nPriority: " + p.toString() +"\n"+ getDates();
+	} 
 }
