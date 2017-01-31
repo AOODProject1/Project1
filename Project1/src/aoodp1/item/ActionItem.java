@@ -36,7 +36,9 @@ public class ActionItem {
 			if (dates[i]==null) continue;
 			if (dates[i].getDate().isBefore(LocalDate.now())) {
 				if (p.ordinal() < i) {
+					addHistory("Priority changed from \"" + p + "\" to \"" + Priority.values()[i] + "\"");
 					p = Priority.values()[i];
+					
 				}
 			}
 		}
@@ -53,12 +55,22 @@ public class ActionItem {
 		addHistory("Comment changed from \"" + this.comment + "\" to \"" + comment + "\"");
 		this.comment=comment;
 	}
+	public void changePriority(Priority p) {
+		addHistory("Priority changed from \"" + this.p + "\" to \"" + p + "\"");
+		this.p=p;
+	}
 	public String getHistory() {
 		String out="";
 		for (String item : (String[])history.toArray()) {
 			out += item + "\n";
 		}
 		return out;
+	}
+	public void editHistory(int i,String text) {
+		history.set(i, text);
+	}
+	public String getHistoryItem(int i) {
+		return history.get(i);
 	}
 	public String[] getHistoryAsArray() {
 		return (String[])history.toArray();
