@@ -2,9 +2,7 @@ package aoodp1.item;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.util.Date;
-
-import javax.swing.UIManager;
+import java.time.LocalDate;
 
 public enum Priority {
 
@@ -15,14 +13,14 @@ public enum Priority {
 	COMPLETED(Color.green);
 	
 	private Color c;
-	private Date d;
+	private LocalDate d;
 	Priority(Color c) {
 		this.c=c;
 	}
-	void setDate(Date d) {
+	void setDate(LocalDate d) {
 		this.d=d;
 	}
-	Date getDate() {
+	LocalDate getDate() {
 		if (d!=null)
 			return d;
 		return null;
