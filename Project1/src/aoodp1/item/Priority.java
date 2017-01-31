@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.util.Date;
 
+import javax.swing.UIManager;
+
 public enum Priority {
 
 	URGENT(Color.red),
@@ -28,13 +30,21 @@ public enum Priority {
 	Color getColor() {
 		return c;
 	}
-	static Font TranslatePriority(Priority p) {
-		return null;
+	Font TranslatePriority(Priority p) {
+		switch (this) {
+		case URGENT:return new Font("SansSerif",Font.BOLD,12);
+		case CURRENT:return new Font("SansSerif",Font.PLAIN,12);
+		case EVENTUAL:return new Font("SansSerif",Font.ITALIC,12);
+		case INACTIVE:return new Font("SansSerif",Font.ITALIC,12);
+		case COMPLETED:return new Font("SansSerif",Font.PLAIN,12);
+		default:return new Font("SansSerif",Font.PLAIN,12);
+		}
 	}
 	public String toString() {
 		switch (this) {
 		case URGENT:return "Urgent";
 		case CURRENT:return "Current";
+		case EVENTUAL:return "Eventual";
 		case INACTIVE:return "Inactive";
 		case COMPLETED:return "Completed";
 		default:return "Unknown Priority";

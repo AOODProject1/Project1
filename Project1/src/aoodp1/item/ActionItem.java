@@ -59,6 +59,10 @@ public class ActionItem {
 		addHistory("Priority changed from \"" + this.p + "\" to \"" + p + "\"");
 		this.p=p;
 	}
+	public void changePriorityDate(LocalDate d,Priority p) {
+		addHistory("Date to change priority changed from \"" + this.dates[p.ordinal()] + "\" to \"" + new PriorityDate(d,p) + "\"");
+		dates[p.ordinal()] = new PriorityDate(d,p);
+	}
 	public String getHistory() {
 		String out="";
 		for (String item : (String[])history.toArray()) {
@@ -74,9 +78,6 @@ public class ActionItem {
 	}
 	public String[] getHistoryAsArray() {
 		return (String[])history.toArray();
-	}
-	public void changePriorityDate(LocalDate d,Priority p) {
-		dates[p.ordinal()] = new PriorityDate(d,p);
 	}
 	public String getDates() {
 		String out="Dates at which the priority will change:\n";
