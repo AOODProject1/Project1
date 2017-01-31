@@ -31,4 +31,13 @@ public enum Priority {
 	static Font TranslatePriority(Priority p) {
 		return null;
 	}
+	public String toString() {
+		switch (this) {
+		case URGENT:return "Urgent";
+		case CURRENT:return "Current";
+		case INACTIVE:return "Inactive";
+		case COMPLETED:return "Completed";
+		default:return "Unknown Priority";
+		}
+	}
 }
