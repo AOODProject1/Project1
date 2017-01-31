@@ -37,8 +37,15 @@ public class ActionItem {
 		}
 		return out;
 	}
+	public String getDates() {
+		String out="Dates at which the priority will change:\n";
+		for (PriorityDate pd : dates) {
+			out += pd + "\n";
+		}
+		return out;
+	}
 	public String toString() {
-		return getName() + "\n" + p.toString() + "\n" + getHistory();
+		return getName() + "\nPriority: " + p.toString() +"\n"+ getDates() +"\n" + getHistory();
 		
 	}
 }

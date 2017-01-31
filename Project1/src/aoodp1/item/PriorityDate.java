@@ -15,5 +15,7 @@ public class PriorityDate {
 	public Priority getPriority() {
 		return priorityToChangeTo;
 	}
-
+	public String toString() {
+		return "["+dateToChangeAt+"] "+ priorityToChangeTo;
+	}
 }
