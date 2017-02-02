@@ -1,16 +1,18 @@
 package aoodp1.screens;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 public class LoginScreen extends JFrame{
-	JFrame f = new JFrame();
-	JPanel p;
+	private static JFrame f = new JFrame();
+	private static JPanel p;
 	
-	public LoginScreen(){
+	public static void main(String[] args){
 		p = new JPanel();
 		f.setSize(500, 500);
-		f.setVisible(true);
 		f.add(p);
 		JTextField user = new JTextField(10);
 		JTextField password = new JTextField(10);
@@ -20,9 +22,12 @@ public class LoginScreen extends JFrame{
 		p.add(user);
 		p.add(password);
 		p.add(login);
+		f.pack();
+		f.setVisible(true);
 	}
-	
-	public static void main(String args[]){
-        LoginScreen x = new LoginScreen();
+	private class LoginButton implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			
+		}
 	}
 }

@@ -31,7 +31,6 @@ public class MainScreen {
 			p = new JPanel();
 			JMenuItem save = new JMenuItem("Save As...");
 			f.setSize(500, 500);
-			f.setVisible(true);
 			f.add(p);
 			f.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 			f.addWindowListener(new SaveAtClose());
@@ -47,6 +46,7 @@ public class MainScreen {
 	        save.addActionListener(new SaveListener());
 	        quit.addActionListener(new QuitListener());
 	        p.add(bar);
+			f.setVisible(true);
 		}
 		private static boolean close() {
 			int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to quit", "Confirm Quit", JOptionPane.YES_NO_OPTION);
