@@ -6,6 +6,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
@@ -21,12 +22,14 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
 import aoodp1.item.ActionItem;
+import aoodp1.item.Priority;
 
 public class MainScreen {
 		private static JFrame f = new JFrame();
 		private static JPanel p;
 		private static ArrayList<ActionItem> toDos;
 		private static File whereToSave=null;
+		private static final String FILEHEADER = System.getProperty("user.home") + "/ToDoList/ListData/"; 
 		public static void main(String[] args) {
 			p = new JPanel();
 			JMenuItem save = new JMenuItem("Save As...");
@@ -47,21 +50,27 @@ public class MainScreen {
 	        quit.addActionListener(new QuitListener());
 	        p.add(bar);
 			f.setVisible(true);
+			//EditActionScreen.editActionItem(new ActionItem("Get groceries",Priority.URGENT)); //Test EditActionItem
 		}
 		private static boolean close() {
 			int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to quit", "Confirm Quit", JOptionPane.YES_NO_OPTION);
 			if (confirm == JOptionPane.NO_OPTION) return false;
 			
-				System.out.println("eioi");
 				ObjectOutputStream p = null;
 				//Save the actionitems to a file of the users' choosing
 				if (whereToSave==null) {
 					String fileName = JOptionPane.showInputDialog("Input a file name");
-					whereToSave = new File(fileName+".tdl");
+					whereToSave = new File(FILEHEADER+fileName+".tdl");
 				} 
 				if (whereToSave==null) System.exit(0);
+				new File(FILEHEADER).mkdirs();
 				try {
-					p = new ObjectOutputStream(new PrintStream(whereToSave));
+					whereToSave.createNewFile();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				try {
+					p = new ObjectOutputStream(new FileOutputStream(whereToSave));
 				} catch (FileNotFoundException e1) {
 					e1.printStackTrace();
 				} catch (IOException e1) {
@@ -71,13 +80,14 @@ public class MainScreen {
 					p.writeObject(toDos);
 				} catch (IOException e1) {
 					e1.printStackTrace();
+				} catch (NullPointerException e1) {
+					//Shouldn't happen except with an empty To-Do List
 				}
 				try {
 					p.close();
 				} catch (IOException e1) {
 				e1.printStackTrace();
-				}
-				System.out.println("eioi");
+				}// catch (NullPointerEx)
 				System.exit(0);
 				return true;
 			
@@ -101,7 +111,7 @@ public class MainScreen {
 			public void actionPerformed(ActionEvent e) {
 				String fileName = JOptionPane.showInputDialog("Input a file name");
 				try {
-					whereToSave = new File(fileName+".tdl");
+					whereToSave = new File(FILEHEADER+fileName+".tdl");
 					System.out.println(whereToSave);
 				} catch (NullPointerException x){System.err.println(x.getMessage());}
 			}
