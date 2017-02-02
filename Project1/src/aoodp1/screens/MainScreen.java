@@ -49,6 +49,7 @@ public class MainScreen {
 	        save.addActionListener(new SaveListener());
 	        quit.addActionListener(new QuitListener());
 	        p.add(bar);
+	        f.pack();
 			f.setVisible(true);
 			//EditActionScreen.editActionItem(new ActionItem("Get groceries",Priority.URGENT)); //Test EditActionItem
 		}

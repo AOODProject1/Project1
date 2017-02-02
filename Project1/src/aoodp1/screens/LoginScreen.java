@@ -6,7 +6,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-public class LoginScreen extends JFrame{
+public class LoginScreen {//extends JFrame{
 	private static JFrame f = new JFrame();
 	private static JPanel p;
 	
@@ -22,10 +22,11 @@ public class LoginScreen extends JFrame{
 		p.add(user);
 		p.add(password);
 		p.add(login);
+		login.addActionListener(new LoginButton());
 		f.pack();
 		f.setVisible(true);
 	}
-	private class LoginButton implements ActionListener {
+	private static class LoginButton implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			
 		}
