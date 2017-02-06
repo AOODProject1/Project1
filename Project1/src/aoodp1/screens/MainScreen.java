@@ -25,22 +25,28 @@ import aoodp1.item.ActionItem;
 import aoodp1.item.Priority;
 
 public class MainScreen {
-		private static JFrame f = new JFrame();
+		private static JFrame f;
 		private static JPanel p;
 		private static ArrayList<ActionItem> toDos;
 		private static File whereToSave=null;
-		private static final String FILEHEADER = System.getProperty("user.home") + "/ToDoList/ListData/"; 
+		private String username;
+		//private static String FILEHEADER;
 		public static void main(String[] args) {
+			new MainScreen("default");
+		} 
+		public MainScreen (String user){
+			this.username=user;
+			whereToSave = new File(System.getProperty("user.home") + "/Documents/ToDoList/" + username + "/ListData.tdl");
+			f = new JFrame();
 			p = new JPanel();
-			JMenuItem save = new JMenuItem("Save As...");
+			JMenuItem save = new JMenuItem("Save");
 			f.setSize(500, 500);
-			f.add(p);
 			f.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 			f.addWindowListener(new SaveAtClose());
 			JMenuBar bar = new JMenuBar();
 			f.add(bar);
 			JMenu file = new JMenu("File");
-			JMenuItem quit= new JMenuItem("Quit");
+			MenuItemAsMenu quit= new MenuItemAsMenu("Quit");
 	        JMenu closedActionItems = new JMenu("Closed Action Items");
 	        bar.add(file);
 	        bar.add(quit);
@@ -49,46 +55,26 @@ public class MainScreen {
 	        save.addActionListener(new SaveListener());
 	        quit.addActionListener(new QuitListener());
 	        p.add(bar);
-	        f.pack();
+			f.add(p);
+	        //f.pack();
 			f.setVisible(true);
-			//EditActionScreen.editActionItem(new ActionItem("Get groceries",Priority.URGENT)); //Test EditActionItem
+			f.repaint();
+			new EditActionScreen().editActionItem(new ActionItem("Get groceries",Priority.URGENT)); //Test EditActionItem
+			//System.out.println("EEEE");
 		}
 		private static boolean close() {
 			int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to quit", "Confirm Quit", JOptionPane.YES_NO_OPTION);
 			if (confirm == JOptionPane.NO_OPTION) return false;
-			
-				ObjectOutputStream p = null;
-				//Save the actionitems to a file of the users' choosing
-				if (whereToSave==null) {
-					String fileName = JOptionPane.showInputDialog("Input a file name");
-					whereToSave = new File(FILEHEADER+fileName+".tdl");
-				} 
 				if (whereToSave==null) System.exit(0);
-				new File(FILEHEADER).mkdirs();
 				try {
 					whereToSave.createNewFile();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				try {
-					p = new ObjectOutputStream(new FileOutputStream(whereToSave));
+					ObjectOutputStream p = new ObjectOutputStream(new FileOutputStream(whereToSave));
+					p.writeObject(toDos);
+					p.close();
 				} catch (FileNotFoundException e1) {
 					e1.printStackTrace();
 				} catch (IOException e1) {
-					e1.printStackTrace();
 				}
-				try {
-					p.writeObject(toDos);
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				} catch (NullPointerException e1) {
-					//Shouldn't happen except with an empty To-Do List
-				}
-				try {
-					p.close();
-				} catch (IOException e1) {
-				e1.printStackTrace();
-				}// catch (NullPointerEx)
 				System.exit(0);
 				return true;
 			
@@ -110,11 +96,19 @@ public class MainScreen {
 		}
 		private static class SaveListener implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
-				String fileName = JOptionPane.showInputDialog("Input a file name");
+				//String fileName = JOptionPane.showInputDialog("Input a file name");
+				//try {
+				//	whereToSave = new File(FILEHEADER+fileName+".tdl");
+				//	System.out.println(whereToSave);
+				//} catch (NullPointerException x){System.err.println(x.getMessage());}
 				try {
-					whereToSave = new File(FILEHEADER+fileName+".tdl");
-					System.out.println(whereToSave);
-				} catch (NullPointerException x){System.err.println(x.getMessage());}
+					ObjectOutputStream p = new ObjectOutputStream(new FileOutputStream(whereToSave));
+					p.writeObject(toDos);
+					p.close();
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+				} catch (IOException e1) {
+				}
 			}
 		}
 		private static class QuitListener implements ActionListener {
