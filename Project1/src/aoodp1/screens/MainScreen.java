@@ -9,7 +9,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -18,8 +17,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
 
 import aoodp1.item.ActionItem;
 import aoodp1.item.Priority;
@@ -67,6 +64,7 @@ public class MainScreen {
 			if (confirm == JOptionPane.NO_OPTION) return false;
 				if (whereToSave==null) System.exit(0);
 				try {
+					whereToSave.getParentFile().mkdirs();
 					whereToSave.createNewFile();
 					ObjectOutputStream p = new ObjectOutputStream(new FileOutputStream(whereToSave));
 					p.writeObject(toDos);
@@ -102,12 +100,16 @@ public class MainScreen {
 				//	System.out.println(whereToSave);
 				//} catch (NullPointerException x){System.err.println(x.getMessage());}
 				try {
+					//System.out.println(whereToSave.getAbsolutePath());
+					whereToSave.getParentFile().mkdirs();
+					whereToSave.createNewFile();
 					ObjectOutputStream p = new ObjectOutputStream(new FileOutputStream(whereToSave));
 					p.writeObject(toDos);
 					p.close();
 				} catch (FileNotFoundException e1) {
 					e1.printStackTrace();
 				} catch (IOException e1) {
+					e1.printStackTrace();
 				}
 			}
 		}
