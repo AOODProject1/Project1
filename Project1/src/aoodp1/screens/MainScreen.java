@@ -23,6 +23,7 @@ import javax.swing.event.MenuListener;
 
 import aoodp1.item.ActionItem;
 import aoodp1.item.Priority;
+import aoodp1.util.Constants;
 
 public class MainScreen {
 		private static JFrame f;
@@ -30,13 +31,12 @@ public class MainScreen {
 		private static ArrayList<ActionItem> toDos;
 		private static File whereToSave=null;
 		private String username;
-		//private static String FILEHEADER;
 		public static void main(String[] args) {
 			new MainScreen("default");
 		} 
 		public MainScreen (String user){
 			this.username=user;
-			whereToSave = new File(System.getProperty("user.home") + "/Documents/ToDoList/" + username + "/ListData.tdl");
+			whereToSave = new File(Constants.FILEHEADER + username + "/ListData.tdl");
 			f = new JFrame();
 			p = new JPanel();
 			JMenuItem save = new JMenuItem("Save");

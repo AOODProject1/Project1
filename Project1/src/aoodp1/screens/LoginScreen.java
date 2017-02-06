@@ -11,6 +11,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import aoodp1.util.Constants;
 public class LoginScreen {//extends JFrame{
 	private static JFrame f = new JFrame("Login Screen");
 	private static JPanel p;
@@ -41,8 +43,8 @@ public class LoginScreen {//extends JFrame{
 			password = p;
 		}
 		public void actionPerformed(ActionEvent e) {
-				if(new File(System.getProperty("user.home") + "/Documents/ToDoList/" + user.getText() + "/").exists()){
-					if(password.getText().equals(System.getProperty("user.home") + "/Documents/ToDoList/" + user.getText() + "/password.txt")){
+				if(new File(Constants.FILEHEADER + user.getText() + "/").exists()){
+					if(password.getText().equals(Constants.FILEHEADER + user.getText() + "/password.txt")){
 					
 					MainScreen.main (new String[0]);
 					f.dispose();
@@ -50,7 +52,7 @@ public class LoginScreen {//extends JFrame{
 				} else {
 					int y = JOptionPane.showConfirmDialog(null, "Do you want to make a new user?");
 					if(y == JOptionPane.YES_OPTION){
-					new File(System.getProperty("user.home") + "/Documents/ToDoList/" + user.getText() + "/").mkdirs();
+					new File(Constants.FILEHEADER + user.getText() + "/").mkdirs();
 					try{
 					new PrintStream(new File(System.getProperty("user.home") + "/ToDoList/" + user.getText() + "/password.txt")).print(password);
 					}catch (FileNotFoundException x){
