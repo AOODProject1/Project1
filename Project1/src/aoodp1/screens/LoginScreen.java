@@ -1,10 +1,14 @@
 package aoodp1.screens;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 public class LoginScreen {//extends JFrame{
@@ -27,28 +31,34 @@ public class LoginScreen {//extends JFrame{
 		login.addActionListener(new LoginButton(user, password));
 		f.pack();
 		f.setVisible(true);
+		System.out.print(System.getProperty("user.home"));
 	}
 	private static class LoginButton implements ActionListener {
 		JTextField user;
 		JTextField password;
-		ArrayList<String> userData = new ArrayList<>();
-		ArrayList<String> passwordData = new ArrayList<>();
 		public LoginButton(JTextField u, JTextField p){
 			user = u;
 			password = p;
 		}
 		public void actionPerformed(ActionEvent e) {
-			for(String s: (String[])userData.toArray()){
-				if(s.equals(user.getText())){
+				if(new File(System.getProperty("user.home") + "/ToDoList/" + user.getText() + "/").exists()){
+					if(password.getText().equals(System.getProperty("user.home") + "/ToDoList/" + user.getText() + "/password.txt")){
 					
 					MainScreen.main (new String[0]);
 					f.dispose();
+					}
 				} else {
-					userData.add(user.getText());
-					passwordData.add(user.getText());
+					int y = JOptionPane.showConfirmDialog(null, "Do you want to make a new user?");
+					if(y == JOptionPane.YES_OPTION){
+					new File(System.getProperty("user.home") + "/ToDoList/" + user.getText() + "/").mkdirs();
+					try{
+					new PrintStream(new File(System.getProperty("user.home") + "/ToDoList/" + user.getText() + "/password.txt")).print(password);
+					}catch (FileNotFoundException x){
+						System.err.println(x.getLocalizedMessage());
+					}
 					MainScreen.main (new String[0]);
 					f.dispose();
-				}
+					}
 			}
 			
 		}
