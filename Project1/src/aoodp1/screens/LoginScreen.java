@@ -41,8 +41,8 @@ public class LoginScreen {//extends JFrame{
 			password = p;
 		}
 		public void actionPerformed(ActionEvent e) {
-				if(new File(System.getProperty("user.home") + "/ToDoList/" + user.getText() + "/").exists()){
-					if(password.getText().equals(System.getProperty("user.home") + "/ToDoList/" + user.getText() + "/password.txt")){
+				if(new File(System.getProperty("user.home") + "/Documents/ToDoList/" + user.getText() + "/").exists()){
+					if(password.getText().equals(System.getProperty("user.home") + "/Documents/ToDoList/" + user.getText() + "/password.txt")){
 					
 					MainScreen.main (new String[0]);
 					f.dispose();
@@ -50,7 +50,7 @@ public class LoginScreen {//extends JFrame{
 				} else {
 					int y = JOptionPane.showConfirmDialog(null, "Do you want to make a new user?");
 					if(y == JOptionPane.YES_OPTION){
-					new File(System.getProperty("user.home") + "/ToDoList/" + user.getText() + "/").mkdirs();
+					new File(System.getProperty("user.home") + "/Documents/ToDoList/" + user.getText() + "/").mkdirs();
 					try{
 					new PrintStream(new File(System.getProperty("user.home") + "/ToDoList/" + user.getText() + "/password.txt")).print(password);
 					}catch (FileNotFoundException x){
