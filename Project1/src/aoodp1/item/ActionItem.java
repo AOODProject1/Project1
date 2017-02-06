@@ -28,6 +28,9 @@ public class ActionItem {
 	public Priority getPriority() {
 		return p;
 	}
+	public String getComment() {
+		return comment;
+	}
 	/**
 	 * Checks the dates to make sure the dates specified in dates[] haven't past.
 	 */
