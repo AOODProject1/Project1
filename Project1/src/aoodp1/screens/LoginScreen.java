@@ -4,7 +4,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
-import java.util.ArrayList;
+import java.util.Scanner;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -33,7 +33,6 @@ public class LoginScreen {//extends JFrame{
 		login.addActionListener(new LoginButton(user, password));
 		f.pack();
 		f.setVisible(true);
-		System.out.print(System.getProperty("user.home"));
 	}
 	private static class LoginButton implements ActionListener {
 		JTextField user;
@@ -43,10 +42,16 @@ public class LoginScreen {//extends JFrame{
 			password = p;
 		}
 		public void actionPerformed(ActionEvent e) {
+			Scanner s = null;
 				if(new File(Constants.FILEHEADER + user.getText() + "/").exists()){
-					if(password.getText().equals(Constants.FILEHEADER + user.getText() + "/password.txt")){
-					
-					MainScreen.main (new String[0]);
+					try {
+						s = new Scanner(new File(Constants.FILEHEADER + user.getText() + "/password.txt"));
+					} catch (FileNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					if(password.getText().equals(s.nextLine())){
+					new MainScreen(user.getText());
 					f.dispose();
 					}
 				} else {
@@ -54,11 +59,11 @@ public class LoginScreen {//extends JFrame{
 					if(y == JOptionPane.YES_OPTION){
 					new File(Constants.FILEHEADER + user.getText() + "/").mkdirs();
 					try{
-					new PrintStream(new File(System.getProperty("user.home") + "/ToDoList/" + user.getText() + "/password.txt")).print(password);
+					new PrintStream(new File(Constants.FILEHEADER + user.getText() + "/password.txt")).print(password.getText());
 					}catch (FileNotFoundException x){
 						System.err.println(x.getLocalizedMessage());
 					}
-					MainScreen.main (new String[0]);
+					new MainScreen(user.getText());
 					f.dispose();
 					}
 			}
