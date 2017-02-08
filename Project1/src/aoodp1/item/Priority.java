@@ -28,7 +28,11 @@ public enum Priority {
 	Color getColor() {
 		return c;
 	}
-	Font TranslatePriority(Priority p) {
+	/**
+	 * Translates the priority represented in an instance of {@code Priority} into a font to display on the main screen
+	 * @return a font that can be displayed on the main screen
+	 */
+	Font TranslatePriority() {
 		switch (this) {
 		case URGENT:return new Font("SansSerif",Font.BOLD,12);
 		case CURRENT:return new Font("SansSerif",Font.PLAIN,12);
