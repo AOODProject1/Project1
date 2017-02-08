@@ -1,5 +1,6 @@
 package aoodp1.screens;
 
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -40,11 +42,12 @@ public class MainScreen {
 			f.setSize(500, 500);
 			f.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 			f.addWindowListener(new SaveAtClose());
+			f.setLayout(new FlowLayout());
 			JMenuBar bar = new JMenuBar();
 			f.add(bar);
 			JMenu file = new JMenu("File");
-			MenuItemAsMenu quit= new MenuItemAsMenu("Quit");
-	        JMenu closedActionItems = new JMenu("Closed Action Items");
+			JButton quit= new JButton("Quit");
+			JButton closedActionItems = new JButton("Closed Action Items");
 	        bar.add(file);
 	        bar.add(quit);
 	        bar.add(closedActionItems);
