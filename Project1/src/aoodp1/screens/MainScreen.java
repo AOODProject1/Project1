@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -137,6 +138,15 @@ public class MainScreen {
 			public static void editActionItem(ActionItem ai) {
 				a=ai;
 				JFrame f = new JFrame();
+				JPanel pB = new JPanel(); //The radio buttons for priorities
+				JPanel pD = new JPanel(); //The dates and checkboxes
+				JPanel[] d = new JPanel[3];
+				for (int i=0;i<d.length;i++) {
+					d[i] = new JPanel();
+					d[i].setLayout(new BoxLayout(d[i],BoxLayout.X_AXIS));
+				}
+				pB.setLayout(new BoxLayout(pB,BoxLayout.Y_AXIS));
+				pD.setLayout(new BoxLayout(pD,BoxLayout.Y_AXIS));
 				ButtonGroup prio = new ButtonGroup();
 				f.setLayout(new FlowLayout());
 				JTextField name = new JTextField(ai.getName(),30);
@@ -157,9 +167,16 @@ public class MainScreen {
 				f.add(name);
 				//f.add();
 				for (JRadioButton r : p) {
-					f.add(r);
+					pB.add(r);
+				}
+				for (int i=0;i<dates.length;i++) {
+					d[i].add(datesEnabled[i]);
+					d[i].add(dates[i]);
+					pD.add(d[i]);
 				}
 				//f.add(new JLabel("EEEEEEe"));
+				f.add(pB);
+				f.add(pD);
 				f.pack();
 				f.setVisible(true);
 			}
@@ -168,8 +185,9 @@ public class MainScreen {
 					a.changeName(((JTextField) e.getSource()).getText());
 				}
 			}
-			private static class PriorityEdit implements ActionListener {
+			private static class PriorityEdit implements ActionListener { //called when the checkboxes are pressed, activating date field
 				public void actionPerformed(ActionEvent e) {
+					
 				}
 			}
 		}
