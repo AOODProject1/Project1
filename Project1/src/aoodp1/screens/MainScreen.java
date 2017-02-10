@@ -30,6 +30,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.ListModel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
@@ -65,11 +66,11 @@ public class MainScreen {
 			toDos.add(new ActionItem("wowoee", Priority.CURRENT));
 			toDos.add(new ActionItem("fjnejf", Priority.COMPLETED));
 			toDos.add(new ActionItem("wonfvbebwoee", Priority.EVENTUAL));
-			model = new DefaultListModel<ActionItem[]>();
-			model.addElement(toDos.toArray(new ActionItem[0]));
-			model.addElement(toDos.toArray(new ActionItem[1]));
-			model.addElement(toDos.toArray(new ActionItem[2]));
-			JList items = new JList<>(model);
+			//ListModel<ActionItem> model = new DefaultListModel<ActionItem>();
+			//model.addElement(toDos.get(0));
+			//model.addElement(toDos.toArray(new ActionItem[1]));
+			//model.addElement(toDos.toArray(new ActionItem[2]));
+			JList<ActionItem> items = new JList<ActionItem>(toDos.toArray(new ActionItem[0]));
 			JMenu file = new JMenu("File");
 			JButton quit= new JButton("Quit");
 			JButton closedActionItems = new JButton("Closed Action Items");
