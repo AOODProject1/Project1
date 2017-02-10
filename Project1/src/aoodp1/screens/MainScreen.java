@@ -37,13 +37,14 @@ import javax.swing.ListSelectionModel;
 import aoodp1.item.ActionItem;
 import aoodp1.item.Priority;
 import aoodp1.util.Constants;
-
+//http://stackoverflow.com/questions/3804361/how-to-enable-drag-and-drop-inside-jlist
 public class MainScreen {
 	
 		private static JFrame f;
 		private static ArrayList<ActionItem> toDos = new ArrayList<ActionItem>();
 		private static File whereToSave=null;
 		private String username;
+		DefaultListModel<ActionItem[]> model;
 		private static final String COMMENT="Comment",HISTORY="History",PRINT="Print to Console";
 		public static void main(String[] args) {
 			new MainScreen("default");
@@ -58,7 +59,6 @@ public class MainScreen {
 			f.addWindowListener(new SaveAtClose());
 			f.setLayout(new FlowLayout());
 			JMenuBar bar = new JMenuBar();
-			f.add(bar);
 			f.setLayout(new BorderLayout());
 			toDos.add(new ActionItem("wowoee", Priority.CURRENT));
 			toDos.add(new ActionItem("fjnejf", Priority.COMPLETED));
@@ -227,5 +227,6 @@ public class MainScreen {
 					}
 				}
 			}
+			
 		}
 }
