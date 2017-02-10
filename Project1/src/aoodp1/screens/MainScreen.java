@@ -149,16 +149,14 @@ public class MainScreen {
 		}
 		private static class ActionEdit {
 			private static ActionItem a;
-			public static void main(String[] args) {
-				//EditActionScreen.editActionItem(new ActionItem("EE",Priority.CURRENT));
-			}
 			public static void editActionItem(ActionItem ai) {
 				a=ai;
-				JFrame f = new JFrame();
+				JFrame f = new JFrame("Edit Item");
 				JPanel pB = new JPanel(); //The radio buttons for priorities
 				JPanel pD = new JPanel(); //The dates and checkboxes and buttons
 				JPanel[] d = new JPanel[3]; //the date/checkbox combos
-				for (int i=0;i<d.length;i++) {
+				
+				for (int i=0;i<d.length;i++) { //date/checkbox panel setup
 					d[i] = new JPanel();
 					d[i].setLayout(new BoxLayout(d[i],BoxLayout.X_AXIS));
 				}
@@ -166,6 +164,7 @@ public class MainScreen {
 				pD.setLayout(new BoxLayout(pD,BoxLayout.Y_AXIS));
 				ButtonGroup prio = new ButtonGroup();
 				f.setLayout(new FlowLayout());
+				
 				JTextField name = new JTextField(ai.getName(),30);
 				JRadioButton[] p = new JRadioButton[5];
 				JTextField[] dates = new JTextField[3];
@@ -173,37 +172,41 @@ public class MainScreen {
 				JButton comment = new JButton(COMMENT);
 				JButton history = new JButton(HISTORY);
 				JButton print = new JButton(PRINT);
+				
 				comment.addActionListener(new ButtonListener());
 				history.addActionListener(new ButtonListener());
 				print.addActionListener(new ButtonListener());
-				pD.add(comment);
-				pD.add(history);
-				pD.add(print);
-				for (int i=0;i<dates.length;i++) {
+				
+				
+				for (int i=0;i<dates.length;i++) { //setting up dates[]
 					dates[i] = new JTextField("__/__/____");
 					dates[i].setEnabled(false);
 					datesEnabled[i] = new JCheckBox();
 				}
-				for (int i=0;i<p.length;i++) {
+				for (int i=0;i<p.length;i++) { //setting up radio buttons
 					p[i] = new JRadioButton(Priority.values()[i].toString());
 					prio.add(p[i]);
 				}
 				f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				//f.setSize(500, 500);
 				f.add(name);
-				//f.add();
-				for (JRadioButton r : p) {
+				for (JRadioButton r : p) { //adding radiobuttons
 					pB.add(r);
 				}
-				for (int i=0;i<dates.length;i++) {
+				for (int i=0;i<dates.length;i++) { //adding dates
 					d[i].add(datesEnabled[i]);
 					d[i].add(dates[i]);
 					pD.add(d[i]);
 				}
-				//f.add(new JLabel("EEEEEEe"));
-				f.add(pB);
-				f.add(pD);
-				f.pack();
+				pD.add(comment); //adding buttons
+				pD.add(history);
+				pD.add(print);
+				
+				f.add(pB); //adding priority radiobutton panel
+				f.add(pD); //adding right panel
+				
+				//f.pack();
+				f.setSize(new Dimension(375,250));
+				f.setResizable(false);
 				f.setVisible(true);
 			}
 			private static class TextEdit implements ActionListener {

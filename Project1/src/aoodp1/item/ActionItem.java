@@ -68,7 +68,7 @@ public class ActionItem {
 	}
 	public String getHistory() {
 		String out="";
-		for (String item : (String[])history.toArray()) {
+		for (String item : history.toArray(new String[0])) {
 			out += item + "\n";
 		}
 		return out;
@@ -80,7 +80,7 @@ public class ActionItem {
 		return history.get(i);
 	}
 	public String[] getHistoryAsArray() {
-		return (String[])history.toArray();
+		return history.toArray(new String[0]);
 	}
 	public String getDates() {
 		String out="Dates at which the priority will change:\n";
