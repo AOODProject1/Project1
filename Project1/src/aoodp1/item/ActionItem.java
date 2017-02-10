@@ -96,6 +96,6 @@ public class ActionItem {
 		return getHeader();
 	}
 	public String getHeader() {
-		return getName() + "\nPriority: " + p.toString();
+		return getName() + " Priority: " + p.toString();
 	} 
 }
