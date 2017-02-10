@@ -1,5 +1,6 @@
 package aoodp1.screens;
 
+import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
@@ -40,8 +41,6 @@ import aoodp1.util.Constants;
 public class MainScreen {
 	
 		private static JFrame f;
-		private static JPanel p;
-		private static JPanel layoutPanel;
 		private static ArrayList<ActionItem> toDos = new ArrayList<ActionItem>();
 		private static File whereToSave=null;
 		private String username;
@@ -53,8 +52,6 @@ public class MainScreen {
 			this.username=user;
 			whereToSave = new File(Constants.FILEHEADER + username + "/ListData.tdl");
 			f = new JFrame();
-			p = new JPanel();
-			layoutPanel = new JPanel();
 			JMenuItem save = new JMenuItem("Save");
 			f.setSize(500, 500);
 			f.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -62,8 +59,7 @@ public class MainScreen {
 			f.setLayout(new FlowLayout());
 			JMenuBar bar = new JMenuBar();
 			f.add(bar);
-			LayoutManager layout = new BoxLayout(layoutPanel, BoxLayout.PAGE_AXIS);
-			layoutPanel.setLayout(layout);
+			f.setLayout(new BorderLayout());
 			toDos.add(new ActionItem("wowoee", Priority.CURRENT));
 			toDos.add(new ActionItem("fjnejf", Priority.COMPLETED));
 			toDos.add(new ActionItem("wonfvbebwoee", Priority.EVENTUAL));
@@ -73,19 +69,16 @@ public class MainScreen {
 			//model.addElement(toDos.toArray(new ActionItem[2]));
 			JList<ActionItem> items = new JList<ActionItem>(toDos.toArray(new ActionItem[0]));
 			JMenu file = new JMenu("File");
-			JButton quit= new JButton("Quit");
-			JButton closedActionItems = new JButton("Closed Action Items");
+			JMenuItem quit= new JMenuItem("Quit");
+			JMenuItem closedActionItems = new JMenuItem("Closed Action Items");
 	        bar.add(file);
 	        bar.add(quit);
 	        bar.add(closedActionItems);
 	        file.add(save);
 	        save.addActionListener(new SaveListener());
 	        quit.addActionListener(new QuitListener());
-	        p.add(bar);
-	        layoutPanel.setBounds(0, 50, 200, 400);
-	        layoutPanel.add(items);
-			f.add(layoutPanel);
-			f.add(p);
+	        f.setJMenuBar(bar);
+			f.add(items, BorderLayout.LINE_START);
 	        //f.pack();
 			f.setVisible(true);
 			f.repaint();
