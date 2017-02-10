@@ -4,7 +4,7 @@ import java.awt.Graphics;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-
+@Deprecated
 public class MenuItemAsMenu extends JMenuItem {
 	private static final long serialVersionUID = 1L;
 
