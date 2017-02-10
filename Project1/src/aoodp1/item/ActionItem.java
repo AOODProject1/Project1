@@ -89,10 +89,13 @@ public class ActionItem {
 		}
 		return out;
 	}
-	public String toString() {
-		return getHeader() +"\n" + getHistory();	
+	public String getFullInfo() {
+		return getHeader() + "\n" + getDates() + "\n" + getHistory();
+	}
+	public String toString() {	
+		return getHeader();
 	}
 	public String getHeader() {
-		return getName() + "\nPriority: " + p.toString() +"\n"+ getDates();
+		return getName() + "\nPriority: " + p.toString();
 	} 
 }
