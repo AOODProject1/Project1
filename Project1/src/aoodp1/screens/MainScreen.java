@@ -164,20 +164,14 @@ public class MainScreen {
 				pD.setLayout(new BoxLayout(pD,BoxLayout.Y_AXIS));
 				ButtonGroup prio = new ButtonGroup();
 				f.setLayout(new FlowLayout());
-				
-				JTextField name = new JTextField(ai.getName(),30);
+
+				JTextField name = new JTextField(ai.getName(),30); //Component setup/initialization
 				JRadioButton[] p = new JRadioButton[5];
 				JTextField[] dates = new JTextField[3];
 				JCheckBox[] datesEnabled = new JCheckBox[3];
 				JButton comment = new JButton(COMMENT);
 				JButton history = new JButton(HISTORY);
 				JButton print = new JButton(PRINT);
-				
-				comment.addActionListener(new ButtonListener());
-				history.addActionListener(new ButtonListener());
-				print.addActionListener(new ButtonListener());
-				
-				
 				for (int i=0;i<dates.length;i++) { //setting up dates[]
 					dates[i] = new JTextField("__/__/____");
 					dates[i].setEnabled(false);
@@ -187,8 +181,14 @@ public class MainScreen {
 					p[i] = new JRadioButton(Priority.values()[i].toString());
 					prio.add(p[i]);
 				}
-				f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				f.add(name);
+				
+				name.addActionListener(new TextEdit()); //adding listeners
+				for (JRadioButton r : p) {r.addActionListener(new PriorityEdit());}
+				comment.addActionListener(new ButtonListener());
+				history.addActionListener(new ButtonListener());
+				print.addActionListener(new ButtonListener());
+				
+				f.add(name); //adding components
 				for (JRadioButton r : p) { //adding radiobuttons
 					pB.add(r);
 				}
@@ -204,7 +204,7 @@ public class MainScreen {
 				f.add(pB); //adding priority radiobutton panel
 				f.add(pD); //adding right panel
 				
-				//f.pack();
+				f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //setting the frame's properties
 				f.setSize(new Dimension(375,250));
 				f.setResizable(false);
 				f.setVisible(true);
@@ -216,7 +216,9 @@ public class MainScreen {
 			}
 			private static class PriorityEdit implements ActionListener { //called when the checkboxes are pressed, activating date field
 				public void actionPerformed(ActionEvent e) {
-					
+					String name = ((JRadioButton)e.getSource()).getText();
+					System.out.println(name);
+					a.changePriority(Priority.toPriority(name));
 				}
 			}
 			private static class ButtonListener implements ActionListener {

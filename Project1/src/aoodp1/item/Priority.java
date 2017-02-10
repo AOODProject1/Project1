@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.time.LocalDate;
 
+import aoodp1.util.PriorityException;
+
 public enum Priority {
 
 	URGENT(Color.red),
@@ -50,6 +52,16 @@ public enum Priority {
 		case INACTIVE:return "Inactive";
 		case COMPLETED:return "Completed";
 		default:return "Unknown Priority";
+		}
+	}
+	public static Priority toPriority(String s) {
+		switch (s.toLowerCase()) {
+		case "urgent":return URGENT;
+		case "current":return CURRENT;
+		case "eventual":return EVENTUAL;
+		case "inactive":return INACTIVE;
+		case "completed":return COMPLETED;
+			default: throw new PriorityException("Non-existant priority");
 		}
 	}
 }
