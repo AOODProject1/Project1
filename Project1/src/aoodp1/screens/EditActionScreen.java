@@ -7,7 +7,7 @@ import javax.swing.JTextField;
 
 import aoodp1.item.ActionItem;
 import aoodp1.item.Priority;
-
+@Deprecated
 public class EditActionScreen {
 	public static void main(String[] args) {
 		EditActionScreen.editActionItem(new ActionItem("EE",Priority.CURRENT));
@@ -23,5 +23,4 @@ public class EditActionScreen {
 		f.setVisible(true);
 		return ai; //do changes first
 	}
-
 }

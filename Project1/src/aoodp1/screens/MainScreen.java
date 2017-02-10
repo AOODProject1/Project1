@@ -16,9 +16,10 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
-
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JMenu;
@@ -26,6 +27,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
@@ -41,6 +44,7 @@ public class MainScreen {
 		private static ArrayList<ActionItem> toDos = new ArrayList<ActionItem>();
 		private static File whereToSave=null;
 		private String username;
+		private static final String COMMENT="Comment",HISTORY="History",PRINT="Print to Console";
 		public static void main(String[] args) {
 			new MainScreen("default");
 		} 
@@ -84,7 +88,7 @@ public class MainScreen {
 	        //f.pack();
 			f.setVisible(true);
 			f.repaint();
-			new EditActionScreen().editActionItem(new ActionItem("Get groceries",Priority.URGENT)); //Test EditActionItem
+			ActionEdit.editActionItem(new ActionItem("Get groceries",Priority.URGENT)); //Test EditActionItem
 			//System.out.println("EEEE");
 		}
 		private static boolean close() {
@@ -149,7 +153,85 @@ public class MainScreen {
 			}
 
 		}
-		public void boxLayout(Container target, int axis){
-			
+		private static class ActionEdit {
+			private static ActionItem a;
+			public static void main(String[] args) {
+				//EditActionScreen.editActionItem(new ActionItem("EE",Priority.CURRENT));
+			}
+			public static void editActionItem(ActionItem ai) {
+				a=ai;
+				JFrame f = new JFrame();
+				JPanel pB = new JPanel(); //The radio buttons for priorities
+				JPanel pD = new JPanel(); //The dates and checkboxes and buttons
+				JPanel[] d = new JPanel[3]; //the date/checkbox combos
+				for (int i=0;i<d.length;i++) {
+					d[i] = new JPanel();
+					d[i].setLayout(new BoxLayout(d[i],BoxLayout.X_AXIS));
+				}
+				pB.setLayout(new BoxLayout(pB,BoxLayout.Y_AXIS));
+				pD.setLayout(new BoxLayout(pD,BoxLayout.Y_AXIS));
+				ButtonGroup prio = new ButtonGroup();
+				f.setLayout(new FlowLayout());
+				JTextField name = new JTextField(ai.getName(),30);
+				JRadioButton[] p = new JRadioButton[5];
+				JTextField[] dates = new JTextField[3];
+				JCheckBox[] datesEnabled = new JCheckBox[3];
+				JButton comment = new JButton(COMMENT);
+				JButton history = new JButton(HISTORY);
+				JButton print = new JButton(PRINT);
+				comment.addActionListener(new ButtonListener());
+				history.addActionListener(new ButtonListener());
+				print.addActionListener(new ButtonListener());
+				pD.add(comment);
+				pD.add(history);
+				pD.add(print);
+				for (int i=0;i<dates.length;i++) {
+					dates[i] = new JTextField("__/__/____");
+					dates[i].setEnabled(false);
+					datesEnabled[i] = new JCheckBox();
+				}
+				for (int i=0;i<p.length;i++) {
+					p[i] = new JRadioButton(Priority.values()[i].toString());
+					prio.add(p[i]);
+				}
+				f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				//f.setSize(500, 500);
+				f.add(name);
+				//f.add();
+				for (JRadioButton r : p) {
+					pB.add(r);
+				}
+				for (int i=0;i<dates.length;i++) {
+					d[i].add(datesEnabled[i]);
+					d[i].add(dates[i]);
+					pD.add(d[i]);
+				}
+				//f.add(new JLabel("EEEEEEe"));
+				f.add(pB);
+				f.add(pD);
+				f.pack();
+				f.setVisible(true);
+			}
+			private static class TextEdit implements ActionListener {
+				public void actionPerformed(ActionEvent e) {
+					a.changeName(((JTextField) e.getSource()).getText());
+				}
+			}
+			private static class PriorityEdit implements ActionListener { //called when the checkboxes are pressed, activating date field
+				public void actionPerformed(ActionEvent e) {
+					
+				}
+			}
+			private static class ButtonListener implements ActionListener {
+				public void actionPerformed(ActionEvent e) {
+					JButton source = (JButton)e.getSource();
+					switch (source.getText()) {
+						case COMMENT:JOptionPane.showMessageDialog(null, a.getComment());
+						case HISTORY:JOptionPane.showMessageDialog(null, a.getHistory());
+						case PRINT:
+						default:
+					}
+				}
+			}
 		}
 }
