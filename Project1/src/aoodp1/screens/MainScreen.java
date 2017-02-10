@@ -1,5 +1,8 @@
 package aoodp1.screens;
 
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -11,21 +14,28 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
+import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 
 import aoodp1.item.ActionItem;
 import aoodp1.item.Priority;
 import aoodp1.util.Constants;
 
 public class MainScreen {
+	
 		private static JFrame f;
 		private static JPanel p;
-		private static ArrayList<ActionItem> toDos;
+		private static JPanel layoutPanel;
+		private static ArrayList<ActionItem> toDos = new ArrayList<ActionItem>();
 		private static File whereToSave=null;
 		private String username;
 		public static void main(String[] args) {
@@ -36,12 +46,23 @@ public class MainScreen {
 			whereToSave = new File(Constants.FILEHEADER + username + "/ListData.tdl");
 			f = new JFrame();
 			p = new JPanel();
+			layoutPanel = new JPanel();
 			JMenuItem save = new JMenuItem("Save");
 			f.setSize(500, 500);
 			f.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 			f.addWindowListener(new SaveAtClose());
 			JMenuBar bar = new JMenuBar();
 			f.add(bar);
+			LayoutManager layout = new BoxLayout(layoutPanel, BoxLayout.PAGE_AXIS);
+			layoutPanel.setLayout(layout);
+			toDos.add(new ActionItem("wowoee", Priority.CURRENT));
+			toDos.add(new ActionItem("fjnejf", Priority.COMPLETED));
+			toDos.add(new ActionItem("wonfvbebwoee", Priority.EVENTUAL));
+			DefaultListModel<ActionItem[]> model = new DefaultListModel<ActionItem[]>();
+			model.addElement(toDos.toArray(new ActionItem[0]));
+			model.addElement(toDos.toArray(new ActionItem[1]));
+			model.addElement(toDos.toArray(new ActionItem[2]));
+			JList items = new JList<>(model);
 			JMenu file = new JMenu("File");
 			MenuItemAsMenu quit= new MenuItemAsMenu("Quit");
 	        JMenu closedActionItems = new JMenu("Closed Action Items");
@@ -52,6 +73,9 @@ public class MainScreen {
 	        save.addActionListener(new SaveListener());
 	        quit.addActionListener(new QuitListener());
 	        p.add(bar);
+	        layoutPanel.setBounds(0, 50, 200, 400);
+	        layoutPanel.add(items);
+			f.add(layoutPanel);
 			f.add(p);
 	        //f.pack();
 			f.setVisible(true);
@@ -83,7 +107,6 @@ public class MainScreen {
 			public void windowClosing(WindowEvent e) {
 				close();
 			}
-			
 			public void windowActivated(WindowEvent e) {}
 			public void windowClosed(WindowEvent e) {}
 			public void windowDeactivated(WindowEvent e) {}
@@ -121,5 +144,8 @@ public class MainScreen {
 				
 			}
 
+		}
+		public void boxLayout(Container target, int axis){
+			
 		}
 }
