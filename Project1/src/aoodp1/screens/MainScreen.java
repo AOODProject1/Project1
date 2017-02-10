@@ -1,5 +1,6 @@
 package aoodp1.screens;
 
+import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
@@ -35,15 +36,15 @@ import javax.swing.ListSelectionModel;
 import aoodp1.item.ActionItem;
 import aoodp1.item.Priority;
 import aoodp1.util.Constants;
-
+//http://stackoverflow.com/questions/3804361/how-to-enable-drag-and-drop-inside-jlist
 public class MainScreen {
 	
 		private static JFrame f;
 		private static JPanel p;
-		private static JPanel layoutPanel;
 		private static ArrayList<ActionItem> toDos = new ArrayList<ActionItem>();
 		private static File whereToSave=null;
 		private String username;
+		DefaultListModel<ActionItem[]> model;
 		private static final String COMMENT="Comment",HISTORY="History",PRINT="Print to Console";
 		public static void main(String[] args) {
 			new MainScreen("default");
@@ -53,7 +54,6 @@ public class MainScreen {
 			whereToSave = new File(Constants.FILEHEADER + username + "/ListData.tdl");
 			f = new JFrame();
 			p = new JPanel();
-			layoutPanel = new JPanel();
 			JMenuItem save = new JMenuItem("Save");
 			f.setSize(500, 500);
 			f.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -61,12 +61,11 @@ public class MainScreen {
 			f.setLayout(new FlowLayout());
 			JMenuBar bar = new JMenuBar();
 			f.add(bar);
-			LayoutManager layout = new BoxLayout(layoutPanel, BoxLayout.PAGE_AXIS);
-			layoutPanel.setLayout(layout);
+			LayoutManager layout = new BorderLayout();
 			toDos.add(new ActionItem("wowoee", Priority.CURRENT));
 			toDos.add(new ActionItem("fjnejf", Priority.COMPLETED));
 			toDos.add(new ActionItem("wonfvbebwoee", Priority.EVENTUAL));
-			DefaultListModel<ActionItem[]> model = new DefaultListModel<ActionItem[]>();
+			model = new DefaultListModel<ActionItem[]>();
 			model.addElement(toDos.toArray(new ActionItem[0]));
 			model.addElement(toDos.toArray(new ActionItem[1]));
 			model.addElement(toDos.toArray(new ActionItem[2]));
@@ -81,10 +80,9 @@ public class MainScreen {
 	        save.addActionListener(new SaveListener());
 	        quit.addActionListener(new QuitListener());
 	        p.add(bar);
-	        layoutPanel.setBounds(0, 50, 200, 400);
-	        layoutPanel.add(items);
-			f.add(layoutPanel);
-			f.add(p);
+	        f.setLayout(layout);
+			f.add(items, BorderLayout.LINE_START);
+			f.add(p, BorderLayout.PAGE_START);
 	        //f.pack();
 			f.setVisible(true);
 			f.repaint();
@@ -233,5 +231,6 @@ public class MainScreen {
 					}
 				}
 			}
+			
 		}
 }
