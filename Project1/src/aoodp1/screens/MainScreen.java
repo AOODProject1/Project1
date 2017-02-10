@@ -35,6 +35,7 @@ public class MainScreen {
 		private static ArrayList<ActionItem> toDos;
 		private static File whereToSave=null;
 		private String username;
+		private static final String COMMENT="Comment",HISTORY="History",PRINT="Print to Console";
 		public static void main(String[] args) {
 			new MainScreen("default");
 		} 
@@ -139,8 +140,8 @@ public class MainScreen {
 				a=ai;
 				JFrame f = new JFrame();
 				JPanel pB = new JPanel(); //The radio buttons for priorities
-				JPanel pD = new JPanel(); //The dates and checkboxes
-				JPanel[] d = new JPanel[3];
+				JPanel pD = new JPanel(); //The dates and checkboxes and buttons
+				JPanel[] d = new JPanel[3]; //the date/checkbox combos
 				for (int i=0;i<d.length;i++) {
 					d[i] = new JPanel();
 					d[i].setLayout(new BoxLayout(d[i],BoxLayout.X_AXIS));
@@ -153,6 +154,15 @@ public class MainScreen {
 				JRadioButton[] p = new JRadioButton[5];
 				JTextField[] dates = new JTextField[3];
 				JCheckBox[] datesEnabled = new JCheckBox[3];
+				JButton comment = new JButton(COMMENT);
+				JButton history = new JButton(HISTORY);
+				JButton print = new JButton(PRINT);
+				comment.addActionListener(new ButtonListener());
+				history.addActionListener(new ButtonListener());
+				print.addActionListener(new ButtonListener());
+				pD.add(comment);
+				pD.add(history);
+				pD.add(print);
 				for (int i=0;i<dates.length;i++) {
 					dates[i] = new JTextField("__/__/____");
 					dates[i].setEnabled(false);
@@ -188,6 +198,17 @@ public class MainScreen {
 			private static class PriorityEdit implements ActionListener { //called when the checkboxes are pressed, activating date field
 				public void actionPerformed(ActionEvent e) {
 					
+				}
+			}
+			private static class ButtonListener implements ActionListener {
+				public void actionPerformed(ActionEvent e) {
+					JButton source = (JButton)e.getSource();
+					switch (source.getText()) {
+						case COMMENT:JOptionPane.showMessageDialog(null, a.getComment());
+						case HISTORY:JOptionPane.showMessageDialog(null, a.getHistory());
+						case PRINT:
+						default:
+					}
 				}
 			}
 		}
