@@ -7,6 +7,8 @@ import java.awt.LayoutManager;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.TextEvent;
+import java.awt.event.TextListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
@@ -14,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
@@ -149,6 +152,7 @@ public class MainScreen {
 		}
 		private static class ActionEdit {
 			private static ActionItem a;
+			private static JTextField[] dates;
 			public static void editActionItem(ActionItem ai) {
 				a=ai;
 				JFrame f = new JFrame("Edit Item");
@@ -167,7 +171,7 @@ public class MainScreen {
 
 				JTextField name = new JTextField(ai.getName(),30); //Component setup/initialization
 				JRadioButton[] p = new JRadioButton[5];
-				JTextField[] dates = new JTextField[3];
+				dates = new JTextField[3];
 				JCheckBox[] datesEnabled = new JCheckBox[3];
 				JButton comment = new JButton(COMMENT);
 				JButton history = new JButton(HISTORY);
@@ -196,6 +200,8 @@ public class MainScreen {
 				for (int i=0;i<dates.length;i++) { //adding dates
 					d[i].add(datesEnabled[i]);
 					d[i].add(dates[i]);
+					datesEnabled[i].addActionListener(new PDateCBox(i));
+					dates[i].addTextListener(new PDateEdit(i));
 					pD.add(d[i]);
 				}
 				pD.add(comment); //adding buttons
@@ -219,6 +225,33 @@ public class MainScreen {
 				public void actionPerformed(ActionEvent e) {
 					String name = ((JRadioButton)e.getSource()).getText();
 					a.changePriority(Priority.toPriority(name));
+				}
+			}
+			private static class PDateCBox implements ActionListener {
+				private int index;
+				public PDateCBox(int index) {
+					this.index=index;
+				}
+				public void actionPerformed(ActionEvent e) {
+					if (((JCheckBox)e.getSource()).isSelected())
+					dates[index].setEnabled(true);
+					else dates[index].setEnabled(false);
+				}
+			}
+			private static class PDateEdit implements TextListener {
+				private int index;
+				public PDateEdit(int index) {
+					this.index=index;
+				}
+				public void textValueChanged(TextEvent e) {
+					try {
+						String messageText = ((JTextField)e.getSource()).getText().trim();
+						String y = messageText.substring(0, messageText.indexOf("/"));
+						System.out.println(y);
+						LocalDate d = LocalDate.of(0, 0, 0);
+					} catch (ClassCastException e2) {
+						System.err.print(e2.getMessage());
+					} catch (Exception e2) {}
 				}
 			}
 			private static class ButtonListener implements ActionListener { //!!FLAG!! Work to be done here
