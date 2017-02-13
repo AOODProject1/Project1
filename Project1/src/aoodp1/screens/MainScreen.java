@@ -181,6 +181,7 @@ public class MainScreen {
 					p[i] = new JRadioButton(Priority.values()[i].toString());
 					prio.add(p[i]);
 				}
+				p[0].setSelected(true);
 				
 				name.addActionListener(new TextEdit()); //adding listeners
 				for (JRadioButton r : p) {r.addActionListener(new PriorityEdit());}
@@ -214,7 +215,7 @@ public class MainScreen {
 					a.changeName(((JTextField) e.getSource()).getText());
 				}
 			}
-			private static class PriorityEdit implements ActionListener { //called when the checkboxes are pressed, activating date field
+			private static class PriorityEdit implements ActionListener { //called when the radiobuttons are pressed to change priority
 				public void actionPerformed(ActionEvent e) {
 					String name = ((JRadioButton)e.getSource()).getText();
 					a.changePriority(Priority.toPriority(name));
