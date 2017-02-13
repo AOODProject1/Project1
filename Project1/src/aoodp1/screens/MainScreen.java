@@ -217,11 +217,10 @@ public class MainScreen {
 			private static class PriorityEdit implements ActionListener { //called when the checkboxes are pressed, activating date field
 				public void actionPerformed(ActionEvent e) {
 					String name = ((JRadioButton)e.getSource()).getText();
-					System.out.println(name);
 					a.changePriority(Priority.toPriority(name));
 				}
 			}
-			private static class ButtonListener implements ActionListener {
+			private static class ButtonListener implements ActionListener { //!!FLAG!! Work to be done here
 				public void actionPerformed(ActionEvent e) {
 					JButton source = (JButton)e.getSource();
 					switch (source.getText()) {
