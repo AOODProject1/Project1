@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.TextEvent;
 import java.awt.event.TextListener;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
@@ -36,6 +37,8 @@ import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.event.MouseInputAdapter;
 
 import aoodp1.item.ActionItem;
 import aoodp1.item.Priority;
@@ -47,7 +50,8 @@ public class MainScreen {
 		private static ArrayList<ActionItem> toDos = new ArrayList<ActionItem>();
 		private static File whereToSave=null;
 		private String username;
-		DefaultListModel<ActionItem[]> model;
+		static DefaultListModel<ActionItem[]> model;
+		static JList<ActionItem> items;
 		private static final String COMMENT="Comment",HISTORY="History",PRINT="Print to Console";
 		public static void main(String[] args) {
 			new MainScreen("default");
@@ -63,14 +67,18 @@ public class MainScreen {
 			f.setLayout(new FlowLayout());
 			JMenuBar bar = new JMenuBar();
 			f.setLayout(new BorderLayout());
+			
 			toDos.add(new ActionItem("wowoee", Priority.CURRENT));
 			toDos.add(new ActionItem("fjnejf", Priority.COMPLETED));
 			toDos.add(new ActionItem("wonfvbebwoee", Priority.EVENTUAL));
-			//ListModel<ActionItem> model = new DefaultListModel<ActionItem>();
+			model = new DefaultListModel<ActionItem[]>();
 			//model.addElement(toDos.get(0));
 			//model.addElement(toDos.toArray(new ActionItem[1]));
 			//model.addElement(toDos.toArray(new ActionItem[2]));
-			JList<ActionItem> items = new JList<ActionItem>(toDos.toArray(new ActionItem[0]));
+			mouseAdapter drag = new mouseAdapter();
+			items = new JList<ActionItem>(toDos.toArray(new ActionItem[0]));
+			items.addMouseListener(drag);
+			items.addMouseMotionListener(drag);
 			JMenu file = new JMenu("File");
 			JMenuItem quit= new JMenuItem("Quit");
 			JMenuItem closedActionItems = new JMenuItem("Closed Action Items");
@@ -265,6 +273,33 @@ public class MainScreen {
 					}
 				}
 			}
-			
 		}
-}
+		private static class mouseAdapter extends MouseInputAdapter{
+			private boolean mouseDrag = false;
+			private int dragSourceIndex;
+			@Override
+			public void mousePressed(MouseEvent e){
+				if(SwingUtilities.isLeftMouseButton(e)){
+					dragSourceIndex = items.getSelectedIndex();
+					mouseDrag = true;
+				}
+			}
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				mouseDrag = false;
+			}
+			@Override
+			public void mouseDragged(MouseEvent e){
+				if(mouseDrag){
+					int currentIndex = items.locationToIndex(e.getPoint());
+					if (currentIndex != dragSourceIndex){
+						int dragTargetIndex = items.getSelectedIndex();
+						ActionItem[] dragElement = model.get(dragSourceIndex);
+						items.remove(dragSourceIndex);
+						items.set;
+						dragSourceIndex = currentIndex;
+					}
+				}
+			}
+		}	
+	}
