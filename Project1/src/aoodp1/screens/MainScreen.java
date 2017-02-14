@@ -38,6 +38,8 @@ import javax.swing.ListModel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.MouseInputAdapter;
 
 import aoodp1.item.ActionItem;
@@ -185,7 +187,7 @@ public class MainScreen {
 				JButton history = new JButton(HISTORY);
 				JButton print = new JButton(PRINT);
 				for (int i=0;i<dates.length;i++) { //setting up dates[]
-					dates[i] = new JTextField("__/__/____");
+					dates[i] = new JTextField("YYYY-MM-DD");
 					dates[i].setEnabled(false);
 					datesEnabled[i] = new JCheckBox();
 				}
@@ -209,7 +211,7 @@ public class MainScreen {
 					d[i].add(datesEnabled[i]);
 					d[i].add(dates[i]);
 					datesEnabled[i].addActionListener(new PDateCBox(i));
-					dates[i].addTextListener(new PDateEdit(i));
+					dates[i].getDocument().addDocumentListener(new PDateEdit(i));//(new PDateEdit(i));
 					pD.add(d[i]);
 				}
 				pD.add(comment); //adding buttons
@@ -246,29 +248,53 @@ public class MainScreen {
 					else dates[index].setEnabled(false);
 				}
 			}
-			private static class PDateEdit implements TextListener {
+			private static class PDateEdit implements DocumentListener {
 				private int index;
 				public PDateEdit(int index) {
 					this.index=index;
 				}
-				public void textValueChanged(TextEvent e) {
+				public void textValueChanged() {
 					try {
-						String messageText = ((JTextField)e.getSource()).getText().trim();
-						String y = messageText.substring(0, messageText.indexOf("/"));
-						System.out.println(y);
-						LocalDate d = LocalDate.of(0, 0, 0);
+						String messageText = dates[index].getText().trim();
+						//System.out.println(messageText);
+						int[] dmy = parseString(messageText,'-');
+						if ((dmy[0]+"").length()<4) return; //only 4-digit years
+						LocalDate d = LocalDate.of(dmy[0], dmy[1], dmy[2]); //YYYY-MM-DD - format for dates
+						a.changePriorityDate(d, Priority.values()[index]);
 					} catch (ClassCastException e2) {
-						System.err.print(e2.getMessage());
+						System.err.println(e2.toString());
 					} catch (Exception e2) {}
 				}
+				public void changedUpdate(DocumentEvent arg0) {textValueChanged();}
+				public void insertUpdate(DocumentEvent arg0) {textValueChanged();}
+				public void removeUpdate(DocumentEvent arg0) {textValueChanged();}
+			}
+			
+			private static int[] parseString(String toParse, char parseFor) {
+				ArrayList<Integer> numbers = new ArrayList<Integer>();
+				int lastChar=0;
+				for (int c=0;c<toParse.length();c++) {
+					if (toParse.charAt(c) == parseFor) {
+						numbers.add(Integer.parseInt(toParse.substring(lastChar, c)));
+						lastChar=c+1;
+					}
+				}
+				numbers.add(Integer.parseInt(toParse.substring(lastChar)));
+				int[] n2 = new int[numbers.size()];
+				int index=0;
+				for (Integer i : numbers) {
+					n2[index] = i;
+					index++;
+				}
+				return n2;
 			}
 			private static class ButtonListener implements ActionListener { //!!FLAG!! Work to be done here
 				public void actionPerformed(ActionEvent e) {
 					JButton source = (JButton)e.getSource();
 					switch (source.getText()) {
-						case COMMENT:JOptionPane.showMessageDialog(null, a.getComment());
-						case HISTORY:JOptionPane.showMessageDialog(null, a.getHistory());
-						case PRINT:
+						case COMMENT:JOptionPane.showMessageDialog(null, a.getComment());break;
+						case HISTORY:JOptionPane.showMessageDialog(null, a.getHistory());break;
+						case PRINT:System.out.println(a.getFullInfo());break;
 						default:
 					}
 				}
