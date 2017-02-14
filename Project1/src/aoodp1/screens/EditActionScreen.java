@@ -17,7 +17,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -28,6 +30,9 @@ public class EditActionScreen {
 	private static final String COMMENT="Comment",HISTORY="History",PRINT="Print to Console";
 	private static ActionItem a;
 	private static JTextField[] dates;
+	public static void main(String[] args) {
+		editActionItem(new ActionItem("лю",Priority.CURRENT));
+	}
 	public static void editActionItem(ActionItem ai) {
 		a=ai;
 		JFrame f = new JFrame("Edit Item");
@@ -86,7 +91,7 @@ public class EditActionScreen {
 		f.add(pB); //adding priority radiobutton panel
 		f.add(pD); //adding right panel
 		
-		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //setting the frame's properties
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //setting the frame's properties
 		f.setSize(new Dimension(375,250));
 		f.setResizable(false);
 		f.setVisible(true);
@@ -153,15 +158,45 @@ public class EditActionScreen {
 		}
 		return n2;
 	}
-	private static class ButtonListener implements ActionListener { //!!FLAG!! Work to be done here
+	private static class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			JButton source = (JButton)e.getSource();
 			switch (source.getText()) {
-				case COMMENT:JOptionPane.showMessageDialog(null, a.getComment());break;
+				case COMMENT:new CommentWindow().activate();break;
 				case HISTORY:JOptionPane.showMessageDialog(null, a.getHistory());break;
 				case PRINT:System.out.println(a.getFullInfo());break;
 				default:
 			}
+		}
+	}
+	private static class CommentWindow extends JFrame {
+		public void activate() {
+			JTextArea window = new JTextArea(15,45);
+			window.setText(a.getComment());
+			setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+			JPanel buttons = new JPanel();
+			JButton commit=new JButton("Commit");
+			JButton clear = new JButton("Clear");
+			
+			commit.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					a.changeComment(window.getText());
+					close();
+				}});
+			clear.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					window.setText(null);
+				}});
+			buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
+			buttons.add(commit);
+			buttons.add(clear);
+			add(window);
+			add(buttons);
+			pack();
+			setVisible(true);
+		}
+		private void close() {
+			dispose();
 		}
 	}
 }
