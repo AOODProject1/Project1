@@ -65,7 +65,8 @@ public class EditActionScreen {
 			p[i] = new JRadioButton(Priority.values()[i].toString());
 			prio.add(p[i]);
 		}
-		p[0].setSelected(true);
+		if (a.getPriority()!=null)
+			p[a.getPriority().ordinal()].setSelected(true);
 		
 		name.addActionListener(new TextEdit()); //adding listeners
 		for (JRadioButton r : p) {r.addActionListener(new PriorityEdit());}
@@ -91,7 +92,7 @@ public class EditActionScreen {
 		f.add(pB); //adding priority radiobutton panel
 		f.add(pD); //adding right panel
 		
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //setting the frame's properties
+		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //setting the frame's properties
 		f.setSize(new Dimension(375,250));
 		f.setResizable(false);
 		f.setVisible(true);
