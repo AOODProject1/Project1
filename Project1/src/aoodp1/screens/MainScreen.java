@@ -16,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -69,9 +70,9 @@ public class MainScreen {
 			toDos.add(new ActionItem("fjnejf", Priority.COMPLETED));
 			toDos.add(new ActionItem("wonfvbebwoee", Priority.EVENTUAL));
 			model = new DefaultListModel<ActionItem[]>();
-			//model.addElement(toDos.get(0));
-			//model.addElement(toDos.toArray(new ActionItem[1]));
-			//model.addElement(toDos.toArray(new ActionItem[2]));
+			model.addElement(toDos.toArray(new ActionItem[0]));
+			model.addElement(toDos.toArray(new ActionItem[1]));
+			model.addElement(toDos.toArray(new ActionItem[2]));
 			mouseAdapter drag = new mouseAdapter();
 			items = new JList<ActionItem>(toDos.toArray(new ActionItem[0]));
 			items.addMouseListener(drag);
@@ -246,27 +247,21 @@ public class MainScreen {
 			private int dragSourceIndex;
 			@Override
 			public void mousePressed(MouseEvent e){
-				if(SwingUtilities.isLeftMouseButton(e)){
-					dragSourceIndex = items.getSelectedIndex();
-					mouseDrag = true;
-				}
+				dragSourceIndex = items.getSelectedIndex();
 			}
 			@Override
 			public void mouseReleased(MouseEvent e) {
+				if(mouseDrag){
+					int dragTargetIndex = items.getSelectedIndex();
+					ActionItem[] dragElement = model.get(dragSourceIndex);
+					model.remove(dragSourceIndex);
+					model.add(dragTargetIndex, dragElement);
+				}
 				mouseDrag = false;
 			}
 			@Override
 			public void mouseDragged(MouseEvent e){
-				if(mouseDrag){
-					int currentIndex = items.locationToIndex(e.getPoint());
-					if (currentIndex != dragSourceIndex){
-						int dragTargetIndex = items.getSelectedIndex();
-						ActionItem[] dragElement = model.get(dragSourceIndex);
-						items.remove(dragSourceIndex);
-						items.set;
-						dragSourceIndex = currentIndex;
-					}
-				}
+				mouseDrag = true;
 			}
 		}	
 	}
