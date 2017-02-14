@@ -90,7 +90,7 @@ public class ActionItem {
 		return out;
 	}
 	public String getFullInfo() {
-		return getHeader() + "\n" + getDates() + "\nHistory:\n" + getHistory();
+		return getHeader() + "\nComment: " + getComment() + "\n" + getDates() + "\nHistory:\n" + getHistory();
 	}
 	public String toString() {
 		return getHeader();
