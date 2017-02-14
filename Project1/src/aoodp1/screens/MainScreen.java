@@ -210,7 +210,7 @@ public class MainScreen {
 					d[i].add(datesEnabled[i]);
 					d[i].add(dates[i]);
 					datesEnabled[i].addActionListener(new PDateCBox(i));
-					dates[i].addTextListener(new PDateEdit(i));
+					//dates[i].addTextListener(new PDateEdit(i));
 					pD.add(d[i]);
 				}
 				pD.add(comment); //adding buttons
@@ -284,7 +284,7 @@ public class MainScreen {
 			}
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				if(mouseDrag){
+				if(!mouseDrag){
 					int dragTargetIndex = items.getSelectedIndex();
 					ActionItem[] dragElement = model.get(dragSourceIndex);
 					model.remove(dragSourceIndex);
