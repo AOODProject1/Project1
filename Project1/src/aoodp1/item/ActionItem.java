@@ -90,12 +90,12 @@ public class ActionItem {
 		return out;
 	}
 	public String getFullInfo() {
-		return getHeader() + "\n" + getDates() + "\n" + getHistory();
+		return getHeader() + "\n" + getDates() + "\nHistory:\n" + getHistory();
 	}
-	public String toString() {	
+	public String toString() {
 		return getHeader();
 	}
 	public String getHeader() {
-		return getName() + " Priority: " + p.toString();
+		return getName() + " | Priority: " + p.toString();
 	} 
 }
