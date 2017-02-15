@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
-public class ActionItem {
+public class ActionItem implements Comparable<ActionItem> {
 	private String s; //Name
 	private Priority p;
 	private String comment;
@@ -39,7 +39,7 @@ public class ActionItem {
 			if (dates[i]==null) continue;
 			if (dates[i].getDate().isBefore(LocalDate.now())) {
 				if (p.ordinal() < i) {
-					addHistory("Priority changed from \"" + p + "\" to \"" + Priority.values()[i] + "\"");
+					addHistory("Priority changed from \"" + p + "\" to \"" + Priority.values()[i] + "\" because date passed");
 					p = Priority.values()[i];
 					
 				}
@@ -89,6 +89,9 @@ public class ActionItem {
 		}
 		return out;
 	}
+	public PriorityDate[] getPDates() {
+		return dates;
+	}
 	public String getFullInfo() {
 		return getHeader() + "\nComment: " + getComment() + "\n" + getDates() + "\nHistory:\n" + getHistory();
 	}
@@ -97,5 +100,35 @@ public class ActionItem {
 	}
 	public String getHeader() {
 		return getName() + " | Priority: " + p.toString();
-	} 
+	}
+	/**
+	 * Compares ActionItems' priorities
+	 */
+	public int compareTo(ActionItem o) {
+		return p.ordinal() - o.getPriority().ordinal();
+	}
+	/**
+	 * Compares ActionItems' names
+	 * @param o The second ActionItem
+	 * @return The result of {@code this.getName().compareToIgnoreCase(o.getName);}
+	 */
+	public int compareName(ActionItem o) {
+		return getName().compareToIgnoreCase(o.getName());
+	}
+	/**
+	 * Compares the dates for the ActionItems {@code this} and {@code o}
+	 * @param o the other ActionItem
+	 * @param p the Priority whose date is checked
+	 * @throws ArrayIndexOutOfBoundsException when p is not Urgent, Current, or Eventual
+	 * @return the result of the comparison in LocalDate for the ActionItems' dates, or 0 if one doesn't have the PriorityDate set.
+	 * @see PriorityDate
+	 */
+	public int compareDates(ActionItem o,Priority p) {
+		if (p.ordinal()>2) throw new ArrayIndexOutOfBoundsException("Priority Dates only apply to Urgent, Current, and Eventual");
+		try {
+			return dates[p.ordinal()].getDate().compareTo(o.getPDates()[p.ordinal()].getDate());
+		} catch (NullPointerException e){ //Either date doesn't have the PriorityDate set
+			return 0;
+		}
+	}
 }
