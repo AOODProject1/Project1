@@ -143,7 +143,6 @@ public class EditActionScreen {
 		public void textValueChanged() {
 			try {
 				String messageText = dates[index].getText().trim();
-				//System.out.println(messageText);
 				int[] dmy = parseString(messageText,'-');
 				if ((dmy[0]+"").length()<4) return; //only 4-digit years
 				LocalDate d = LocalDate.of(dmy[0], dmy[1], dmy[2]); //YYYY-MM-DD - format for dates
@@ -158,7 +157,7 @@ public class EditActionScreen {
 		public void removeUpdate(DocumentEvent arg0) {textValueChanged();}
 	}
 	/**
-	 * Parses a string into a bunch of int s (Example: {@code parseString("04/42/25",'/')} would return {@code "0,42,25"}
+	 * Parses a string into a bunch of ints (Example: {@code parseString("04/42/25",'/')} would return {@code "0,42,25"}
 	 * @param toParse the string
 	 * @param parseFor the character separator to search for
 	 * @return
@@ -192,6 +191,10 @@ public class EditActionScreen {
 			}
 		}
 	}
+	/**
+	 * The window activated by pressing the "comment" button
+	 *
+	 */
 	private static class CommentWindow extends JFrame {
 		private static final long serialVersionUID = 3246864078201652807L;
 		public void activate() {
