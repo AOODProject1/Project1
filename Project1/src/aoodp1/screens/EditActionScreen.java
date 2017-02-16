@@ -48,7 +48,7 @@ public class EditActionScreen {
 		ButtonGroup prio = new ButtonGroup();
 		f.setLayout(new FlowLayout());
 
-		JTextField name = new JTextField(ai.getName(),30); //Component setup/initialization
+		JTextField name = new JTextField(a.getName(),30); //Component setup/initialization
 		JRadioButton[] p = new JRadioButton[5];
 		dates = new JTextField[3];
 		JCheckBox[] datesEnabled = new JCheckBox[3];
@@ -74,15 +74,15 @@ public class EditActionScreen {
 			p[a.getPriority().ordinal()].setSelected(true);
 		
 		name.addActionListener(new TextEdit()); //adding listeners
-		for (JRadioButton r : p) {r.addActionListener(new PriorityEdit());}
+		for (JRadioButton r : p) {
+			r.addActionListener(new PriorityEdit());
+			pB.add(r); //adding radiobuttons
+		}
 		comment.addActionListener(new ButtonListener());
 		history.addActionListener(new ButtonListener());
 		print.addActionListener(new ButtonListener());
 		
 		f.add(name); //adding components
-		for (JRadioButton r : p) { //adding radiobuttons
-			pB.add(r);
-		}
 		for (int i=0;i<dates.length;i++) { //adding dates
 			d[i].add(datesEnabled[i]);
 			d[i].add(dates[i]);
