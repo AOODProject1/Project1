@@ -13,15 +13,12 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -196,6 +193,7 @@ public class EditActionScreen {
 		}
 	}
 	private static class CommentWindow extends JFrame {
+		private static final long serialVersionUID = 3246864078201652807L;
 		public void activate() {
 			JTextArea window = new JTextArea(15,45);
 			window.setText(a.getComment());
