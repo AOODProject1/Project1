@@ -2,11 +2,15 @@ package aoodp1.screens;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.Desktop.Action;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
+import java.awt.Toolkit;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.TextEvent;
 import java.awt.event.TextListener;
 import java.awt.event.MouseEvent;
@@ -51,6 +55,7 @@ import aoodp1.util.Constants;
 public class MainScreen {
 	
 		private static JFrame f;
+		
 		private static ArrayList<ActionItem> toDos = new ArrayList<ActionItem>();
 		private static File whereToSave=null;
 		private String username;
@@ -109,11 +114,25 @@ public class MainScreen {
 	        save.addActionListener(new SaveListener());
 	        quit.addActionListener(new QuitListener());
 	        f.setJMenuBar(bar);
-			f.add(items, BorderLayout.LINE_START);
+			JTextField newInputItem = new JTextField("Input An Item");
+			f.add(newInputItem, BorderLayout.SOUTH);
+			newInputItem.addKeyListener(new KeyAdapter(){
+				public void keyPressed(KeyEvent e){
+					int key = e.getKeyCode();
+					int i = 0;
+					if(key == KeyEvent.VK_ENTER){
+						toDos.add(new ActionItem(newInputItem.getText(), Priority.URGENT));
+						items.setListData(toDos.toArray(new ActionItem[0]));
+						newInputItem.setText("");
+						i++;
+					}
+				}
+			});
 	        //f.pack();
+			f.add(items, BorderLayout.LINE_START);
 			f.setVisible(true);
-			f.repaint();
-			EditActionScreen.editActionItem(toDos.get(0)); //Test EditActionItem
+			//f.repaint();
+			//EditActionScreen.editActionItem(toDos.get(0)); //Test EditActionItem
 			//new ActionItem("Get groceries",Priority.URGENT)
 		}
 		private static void sortToDos() {
@@ -196,9 +215,9 @@ public class MainScreen {
 			public void mouseReleased(MouseEvent e) {
 				if(!mouseDrag){
 					int dragTargetIndex = items.getSelectedIndex();
-					ActionItem[] dragElement = model.get(dragSourceIndex);
-					model.remove(dragSourceIndex);
-					model.add(dragTargetIndex, dragElement);
+					ActionItem dragElement = toDos.get(dragSourceIndex);
+					toDos.remove(dragSourceIndex);
+					toDos.add(dragTargetIndex, dragElement);
 				}
 				mouseDrag = false;
 			}
@@ -206,5 +225,5 @@ public class MainScreen {
 			public void mouseDragged(MouseEvent e){
 				mouseDrag = true;
 			}
-		}	
+		}
 	}
