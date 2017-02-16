@@ -58,7 +58,6 @@ public class MainScreen {
 		private static ArrayList<ActionItem> toDos = new ArrayList<ActionItem>();
 		private static File whereToSave=null;
 		private String username;
-		static DefaultListModel<ActionItem[]> model;
 		static JList<ActionItem> items;
 		public static void main(String[] args) {
 			new MainScreen("default");
@@ -74,14 +73,6 @@ public class MainScreen {
 			f.setLayout(new FlowLayout());
 			JMenuBar bar = new JMenuBar();
 			f.setLayout(new BorderLayout());
-			
-			toDos.add(new ActionItem("wowoee", Priority.CURRENT));
-			toDos.add(new ActionItem("fjnejf", Priority.COMPLETED));
-			toDos.add(new ActionItem("wonfvbebwoee", Priority.EVENTUAL));
-			model = new DefaultListModel<ActionItem[]>();
-			model.addElement(toDos.toArray(new ActionItem[0]));
-			model.addElement(toDos.toArray(new ActionItem[1]));
-			model.addElement(toDos.toArray(new ActionItem[2]));
 			mouseAdapter drag = new mouseAdapter();
 			items = new JList<ActionItem>(toDos.toArray(new ActionItem[0]));
 			items.addMouseListener(drag);
@@ -96,7 +87,6 @@ public class MainScreen {
 	        save.addActionListener(new SaveListener());
 	        quit.addActionListener(new QuitListener());
 	        f.setJMenuBar(bar);
-			f.add(items, BorderLayout.LINE_START);
 			JTextField newInputItem = new JTextField("Input An Item");
 			f.add(newInputItem, BorderLayout.SOUTH);
 			newInputItem.addKeyListener(new KeyAdapter(){
@@ -105,16 +95,17 @@ public class MainScreen {
 					int i = 0;
 					if(key == KeyEvent.VK_ENTER){
 						toDos.add(new ActionItem(newInputItem.getText(), Priority.URGENT));
-						model.addElement(toDos.toArray(new ActionItem[i]));
+						items.setListData(toDos.toArray(new ActionItem[0]));
 						newInputItem.setText("");
 						i++;
 					}
 				}
 			});
 	        //f.pack();
+			f.add(items, BorderLayout.LINE_START);
 			f.setVisible(true);
-			f.repaint();
-			EditActionScreen.editActionItem(toDos.get(0)); //Test EditActionItem
+			//f.repaint();
+			//EditActionScreen.editActionItem(toDos.get(0)); //Test EditActionItem
 			//new ActionItem("Get groceries",Priority.URGENT)
 		}
 		private static boolean close() {
@@ -190,9 +181,9 @@ public class MainScreen {
 			public void mouseReleased(MouseEvent e) {
 				if(!mouseDrag){
 					int dragTargetIndex = items.getSelectedIndex();
-					ActionItem[] dragElement = model.get(dragSourceIndex);
-					model.remove(dragSourceIndex);
-					model.add(dragTargetIndex, dragElement);
+					ActionItem dragElement = toDos.get(dragSourceIndex);
+					toDos.remove(dragSourceIndex);
+					toDos.add(dragTargetIndex, dragElement);
 				}
 				mouseDrag = false;
 			}
