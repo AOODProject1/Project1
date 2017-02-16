@@ -67,9 +67,6 @@ public class MainScreen {
 			new MainScreen("default");
 		} 
 		public MainScreen (String user){
-			toDos.add(new ActionItem("Get milk",Priority.URGENT));
-			toDos.add(new ActionItem("Save the world",Priority.EVENTUAL));
-			toDos.add(new ActionItem("do a yeah boi",Priority.CURRENT));
 			this.username=user;
 			whereToSave = new File(Constants.FILEHEADER + username + "/ListData.tdl");
 			f = new JFrame();
