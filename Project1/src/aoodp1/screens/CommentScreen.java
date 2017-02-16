@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JTextField;
 
 import aoodp1.item.ActionItem;
-
+@Deprecated
 public class CommentScreen extends JFrame {
 	
 	public String ShowCommentScreen(ActionItem ai) {
