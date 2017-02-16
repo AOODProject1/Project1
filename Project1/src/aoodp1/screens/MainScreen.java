@@ -54,8 +54,7 @@ public class MainScreen {
 		private static ArrayList<ActionItem> toDos = new ArrayList<ActionItem>();
 		private static File whereToSave=null;
 		private String username;
-		static DefaultListModel<ActionItem[]> model;
-		static JList<ActionItem> items;
+		private static JList<ActionItem> items;
 		private static int compOption=Constants.SORTBYNAME;
 		private static Priority dateOption=Priority.URGENT;
 		public static void main(String[] args) {
@@ -74,14 +73,17 @@ public class MainScreen {
 				prioDates[i] = new JMenuItem(Priority.values()[i].toString());
 				prioDates[i].addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						compOption=Constants.SORTBYDATE;
 						dateOption = Priority.toPriority((((JMenuItem)e.getSource()).getText())); //changes dateOption to the priority on the JMenuItems' name
+						sortToDos();
 					}
 				});
 				sd.add(prioDates[i]);
 			}
 			sn.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						Collections.sort(toDos);
+						compOption=Constants.SORTBYNAME;
+						sortToDos();
 					}
 				});
 			sort.add(sn);
@@ -92,14 +94,6 @@ public class MainScreen {
 			f.setLayout(new FlowLayout());
 			JMenuBar bar = new JMenuBar();
 			f.setLayout(new BorderLayout());
-			
-			toDos.add(new ActionItem("wowoee", Priority.CURRENT));
-			toDos.add(new ActionItem("fjnejf", Priority.COMPLETED));
-			toDos.add(new ActionItem("wonfvbebwoee", Priority.EVENTUAL));
-			model = new DefaultListModel<ActionItem[]>();
-			model.addElement(toDos.toArray(new ActionItem[0]));
-			model.addElement(toDos.toArray(new ActionItem[1]));
-			model.addElement(toDos.toArray(new ActionItem[2]));
 			mouseAdapter drag = new mouseAdapter();
 			items = new JList<ActionItem>(toDos.toArray(new ActionItem[0]));
 			items.addMouseListener(drag);
@@ -121,6 +115,10 @@ public class MainScreen {
 			f.repaint();
 			EditActionScreen.editActionItem(toDos.get(0)); //Test EditActionItem
 			//new ActionItem("Get groceries",Priority.URGENT)
+		}
+		private static void sortToDos() {
+			Collections.sort(toDos);
+			items.setListData(toDos.toArray(new ActionItem[0]));
 		}
 		private static boolean close() {
 			int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to quit", "Confirm Quit", JOptionPane.YES_NO_OPTION);
