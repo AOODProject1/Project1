@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -55,6 +56,8 @@ public class MainScreen {
 		private String username;
 		static DefaultListModel<ActionItem[]> model;
 		static JList<ActionItem> items;
+		private static int compOption=Constants.SORTBYNAME;
+		private static Priority dateOption=Priority.URGENT;
 		public static void main(String[] args) {
 			new MainScreen("default");
 		} 
@@ -63,6 +66,26 @@ public class MainScreen {
 			whereToSave = new File(Constants.FILEHEADER + username + "/ListData.tdl");
 			f = new JFrame();
 			JMenuItem save = new JMenuItem("Save");
+			JMenu sort = new JMenu("Sort");
+			JMenuItem sn = new JMenuItem("...By Name");
+			JMenu sd = new JMenu("...By Date");
+			JMenuItem[] prioDates = new JMenuItem[3];
+			for (int i=0;i<prioDates.length;i++) {
+				prioDates[i] = new JMenuItem(Priority.values()[i].toString());
+				prioDates[i].addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						dateOption = Priority.toPriority((((JMenuItem)e.getSource()).getText())); //changes dateOption to the priority on the JMenuItems' name
+					}
+				});
+				sd.add(prioDates[i]);
+			}
+			sn.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						Collections.sort(toDos);
+					}
+				});
+			sort.add(sn);
+			sort.add(sd);
 			f.setSize(500, 500);
 			f.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 			f.addWindowListener(new SaveAtClose());
@@ -85,6 +108,7 @@ public class MainScreen {
 			JMenuItem quit= new JMenuItem("Quit");
 			JMenuItem closedActionItems = new JMenuItem("Closed Action Items");
 	        bar.add(file);
+	        bar.add(sort);
 	        bar.add(quit);
 	        bar.add(closedActionItems);
 	        file.add(save);
@@ -101,21 +125,24 @@ public class MainScreen {
 		private static boolean close() {
 			int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to quit", "Confirm Quit", JOptionPane.YES_NO_OPTION);
 			if (confirm == JOptionPane.NO_OPTION) return false;
-				if (whereToSave==null) System.exit(0);
-				try {
-					whereToSave.getParentFile().mkdirs();
-					whereToSave.createNewFile();
-					ObjectOutputStream p = new ObjectOutputStream(new FileOutputStream(whereToSave));
-					p.writeObject(toDos);
-					p.close();
-				} catch (FileNotFoundException e1) {
-					e1.printStackTrace();
-				} catch (IOException e1) {
-				}
-				System.exit(0);
-				return true;
-			
-			
+			if (whereToSave==null) System.exit(0);
+			try {
+				whereToSave.getParentFile().mkdirs();
+				whereToSave.createNewFile();
+				ObjectOutputStream p = new ObjectOutputStream(new FileOutputStream(whereToSave));
+				p.writeObject(toDos);
+				p.close();
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			} catch (IOException e1) {}
+			System.exit(0);
+			return true; //technically unreachable
+		}
+		public static int getComparason() {
+			return compOption;
+		}
+		public static Priority getDateOption() {
+			return dateOption;
 		}
 		private static class SaveAtClose implements WindowListener {
 

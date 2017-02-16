@@ -1,6 +1,10 @@
 package aoodp1.item;
 
 import java.util.ArrayList;
+
+import aoodp1.screens.MainScreen;
+import aoodp1.util.Constants;
+
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
@@ -105,7 +109,12 @@ public class ActionItem implements Comparable<ActionItem> {
 	 * Compares ActionItems' priorities
 	 */
 	public int compareTo(ActionItem o) {
-		return p.ordinal() - o.getPriority().ordinal();
+		if (p!=o.getPriority())
+			return p.ordinal() - o.getPriority().ordinal();
+		if (MainScreen.getComparason() == Constants.SORTBYNAME) {
+			return compareName(o);
+		}
+		return compareDates(o,MainScreen.getDateOption());
 	}
 	/**
 	 * Compares ActionItems' names
