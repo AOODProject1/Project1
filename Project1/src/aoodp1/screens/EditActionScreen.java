@@ -132,6 +132,7 @@ public class EditActionScreen {
 				if ((dmy[0]+"").length()<4) return; //only 4-digit years
 				LocalDate d = LocalDate.of(dmy[0], dmy[1], dmy[2]); //YYYY-MM-DD - format for dates
 				a.changePriorityDate(d, Priority.values()[index]);
+				a.validateDates();
 			} catch (ClassCastException e2) {
 				System.err.println(e2.toString());
 			} catch (Exception e2) {}
