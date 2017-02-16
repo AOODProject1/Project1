@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -57,9 +59,15 @@ public class EditActionScreen {
 		JButton history = new JButton(HISTORY);
 		JButton print = new JButton(PRINT);
 		for (int i=0;i<dates.length;i++) { //setting up dates[]
-			dates[i] = new JTextField("YYYY-MM-DD");
-			dates[i].setEnabled(false);
 			datesEnabled[i] = new JCheckBox();
+			if (a.getPDates()[i]==null) {
+				dates[i] = new JTextField("YYYY-MM-DD");
+				dates[i].setEnabled(false);
+			} else {
+				dates[i] = new JTextField(a.getPDates()[i].getDate().toString());
+				dates[i].setEnabled(true);
+				datesEnabled[i].setSelected(true);
+			}
 		}
 		for (int i=0;i<p.length;i++) { //setting up radio buttons
 			p[i] = new JRadioButton(Priority.values()[i].toString());
@@ -92,7 +100,18 @@ public class EditActionScreen {
 		f.add(pB); //adding priority radiobutton panel
 		f.add(pD); //adding right panel
 		
-		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //setting the frame's properties
+		f.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); //setting the frame's properties
+		f.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				try {
+					MainScreen.sortToDos();
+				} catch (NullPointerException x) {
+					System.err.println("Don't run the EditActionScreen without the MainScreen! It gets lonely.");
+					System.exit(0);
+				}
+				f.dispose();
+			}
+		});
 		f.setSize(new Dimension(375,250));
 		f.setResizable(false);
 		f.setVisible(true);
@@ -141,7 +160,12 @@ public class EditActionScreen {
 		public void insertUpdate(DocumentEvent arg0) {textValueChanged();}
 		public void removeUpdate(DocumentEvent arg0) {textValueChanged();}
 	}
-	
+	/**
+	 * Parses a string into a bunch of int s (Example: {@code parseString("04/42/25",'/')} would return {@code "0,42,25"}
+	 * @param toParse the string
+	 * @param parseFor the character separator to search for
+	 * @return
+	 */
 	private static int[] parseString(String toParse, char parseFor) {
 		ArrayList<Integer> numbers = new ArrayList<Integer>();
 		int lastChar=0;

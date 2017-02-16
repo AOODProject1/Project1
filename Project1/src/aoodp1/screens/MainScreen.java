@@ -13,6 +13,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.TextEvent;
 import java.awt.event.TextListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -66,6 +67,9 @@ public class MainScreen {
 			new MainScreen("default");
 		} 
 		public MainScreen (String user){
+			toDos.add(new ActionItem("Get milk",Priority.URGENT));
+			toDos.add(new ActionItem("Save the world",Priority.EVENTUAL));
+			toDos.add(new ActionItem("do a yeah boi",Priority.CURRENT));
 			this.username=user;
 			whereToSave = new File(Constants.FILEHEADER + username + "/ListData.tdl");
 			f = new JFrame();
@@ -135,12 +139,12 @@ public class MainScreen {
 			//EditActionScreen.editActionItem(toDos.get(0)); //Test EditActionItem
 			//new ActionItem("Get groceries",Priority.URGENT)
 		}
-		private static void sortToDos() {
+		public static void sortToDos() {
 			Collections.sort(toDos);
 			items.setListData(toDos.toArray(new ActionItem[0]));
 		}
 		private static boolean close() {
-			int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to quit", "Confirm Quit", JOptionPane.YES_NO_OPTION);
+			int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to quit?", "Confirm Quit", JOptionPane.YES_NO_OPTION);
 			if (confirm == JOptionPane.NO_OPTION) return false;
 			if (whereToSave==null) System.exit(0);
 			try {
@@ -161,18 +165,10 @@ public class MainScreen {
 		public static Priority getDateOption() {
 			return dateOption;
 		}
-		private static class SaveAtClose implements WindowListener {
-
+		private static class SaveAtClose extends WindowAdapter {
 			public void windowClosing(WindowEvent e) {
 				close();
 			}
-			public void windowActivated(WindowEvent e) {}
-			public void windowClosed(WindowEvent e) {}
-			public void windowDeactivated(WindowEvent e) {}
-			public void windowDeiconified(WindowEvent e) {}
-			public void windowIconified(WindowEvent e) {}
-			public void windowOpened(WindowEvent e) {}
-			
 		}
 		private static class SaveListener implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
@@ -220,6 +216,14 @@ public class MainScreen {
 					toDos.add(dragTargetIndex, dragElement);
 				}
 				mouseDrag = false;
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (items.contains(e.getPoint())) {
+					if (e.getClickCount() == 2) {
+						EditActionScreen.editActionItem(items.getSelectedValue());
+					}
+				}
 			}
 			@Override
 			public void mouseDragged(MouseEvent e){
