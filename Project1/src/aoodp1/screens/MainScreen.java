@@ -61,7 +61,7 @@ public class MainScreen {
 		private static ArrayList<ActionItem> toDos = new ArrayList<ActionItem>();
 		private static File whereToSave=null;
 		private String username;
-		private static JList<ActionItem> items;
+		private static DragDropList<ActionItem> items;
 		private static int compOption=Constants.SORTBYNAME;
 		private static Priority dateOption=Priority.URGENT;
 		public static void main(String[] args) {
@@ -102,7 +102,7 @@ public class MainScreen {
 			JMenuBar bar = new JMenuBar();
 			f.setLayout(new BorderLayout());
 			mouseAdapter drag = new mouseAdapter();
-			items = new JList<ActionItem>(toDos.toArray(new ActionItem[0]));
+			items = new DragDropList<ActionItem>(toDos.toArray(new ActionItem[0]));
 			items.addMouseListener(drag);
 			items.addMouseMotionListener(drag);
 			JMenu file = new JMenu("File");
