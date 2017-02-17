@@ -130,6 +130,7 @@ public class MainScreen {
 				}
 			});
 	        //f.pack();
+			items.setDragEnabled(true);
 			f.add(items, BorderLayout.LINE_START);
 			f.setVisible(true);
 			//f.repaint();
@@ -206,7 +207,7 @@ public class MainScreen {
 			}
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				if(!mouseDrag){
+				if(mouseDrag){
 					int dragTargetIndex = items.getSelectedIndex();
 					ActionItem dragElement = toDos.get(dragSourceIndex);
 					toDos.remove(dragSourceIndex);
@@ -214,6 +215,7 @@ public class MainScreen {
 				}
 				mouseDrag = false;
 			}
+			
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (items.contains(e.getPoint())) {
@@ -226,5 +228,6 @@ public class MainScreen {
 			public void mouseDragged(MouseEvent e){
 				mouseDrag = true;
 			}
+			
 		}
 	}
