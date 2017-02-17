@@ -1,5 +1,5 @@
 package aoodp1.screens;
-
+import java.awt.dnd.*;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Desktop.Action;
@@ -53,6 +53,7 @@ import aoodp1.item.ActionItem;
 import aoodp1.item.Priority;
 import aoodp1.util.Constants;
 //http://stackoverflow.com/questions/3804361/how-to-enable-drag-and-drop-inside-jlist
+//http://codeidol.com/java/swing/Lists-and-Combos/Reorder-a-JList-with-Drag-and-Drop/
 public class MainScreen {
 	
 		private static JFrame f;
@@ -228,6 +229,5 @@ public class MainScreen {
 			public void mouseDragged(MouseEvent e){
 				mouseDrag = true;
 			}
-			
 		}
 	}
