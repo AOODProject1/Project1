@@ -101,7 +101,7 @@ public class MainScreen {
 			f.setLayout(new FlowLayout());
 			JMenuBar bar = new JMenuBar();
 			f.setLayout(new BorderLayout());
-			mouseAdapter drag = new mouseAdapter();
+			MouseClicking drag = new MouseClicking();
 			items = new DragDropList<ActionItem>(toDos.toArray(new ActionItem[0]));
 			items.addMouseListener(drag);
 			items.addMouseMotionListener(drag);
@@ -199,7 +199,7 @@ public class MainScreen {
 			}
 
 		}
-		private static class mouseAdapter extends MouseInputAdapter{
+		private static class MouseClicking extends MouseInputAdapter{
 			private boolean mouseDrag = false;
 			private int dragSourceIndex;
 			@Override
@@ -219,10 +219,22 @@ public class MainScreen {
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				//System.out.println(e.getButton() + "\n"+ e.getClickCount());
 				if (items.contains(e.getPoint())) {
 					if (e.getClickCount() == 2) {
 						EditActionScreen.editActionItem(items.getSelectedValue());
 					}
+				} else if (e.getButton() == MouseEvent.BUTTON3){
+					System.out.println("e");
+					JButton[] buttons = {new JButton("Edit"),new JButton("Delete")};
+					int option = JOptionPane.showOptionDialog(null,
+							"What would you like to do?",
+							"ActionItem Options",
+							JOptionPane.DEFAULT_OPTION,
+							JOptionPane.QUESTION_MESSAGE,
+							null,
+							buttons,
+							null);
 				}
 			}
 			@Override

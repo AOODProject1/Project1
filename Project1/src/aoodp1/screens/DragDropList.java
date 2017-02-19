@@ -19,6 +19,8 @@ package aoodp1.screens;
 	import javax.swing.JScrollPane;
 	import javax.swing.TransferHandler;
 
+import aoodp1.item.ActionItem;
+
 	public class DragDropList<E> extends JList<E> {
 
 	  public DragDropList(E[] a) {
