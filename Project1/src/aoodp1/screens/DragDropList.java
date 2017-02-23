@@ -11,7 +11,6 @@ package aoodp1.screens;
 	import java.awt.dnd.DragSourceDropEvent;
 	import java.awt.dnd.DragSourceEvent;
 	import java.awt.dnd.DragSourceListener;
-
 	import javax.swing.DefaultListModel;
 	import javax.swing.DropMode;
 	import javax.swing.JFrame;
@@ -28,19 +27,14 @@ package aoodp1.screens;
 	    setTransferHandler(new MyListDropHandler(this));
 	    new MyDragListener(this);
 	  }
-
 	class MyDragListener implements DragSourceListener, DragGestureListener {
 	  DragDropList list;
-
 	  DragSource ds = new DragSource();
-
 	  public MyDragListener(DragDropList list) {
 	    this.list = list;
 	    DragGestureRecognizer dgr = ds.createDefaultDragGestureRecognizer(list,
 	        DnDConstants.ACTION_MOVE, this);
-
 	  }
-
 	  public void dragGestureRecognized(DragGestureEvent dge) {
 	    StringSelection transferable = new StringSelection(Integer.toString(list.getSelectedIndex()));
 	    ds.startDrag(dge, DragSource.DefaultCopyDrop, transferable, this);
@@ -57,18 +51,15 @@ package aoodp1.screens;
 	      //"repaint" items
 	    }
 	  }
-
 	  public void dropActionChanged(DragSourceDragEvent dsde) {
 	  }
 	}
 
 	class MyListDropHandler extends TransferHandler {
 	  DragDropList list;
-
 	  public MyListDropHandler(DragDropList list) {
 	    this.list = list;
 	  }
-
 	  public boolean canImport(TransferHandler.TransferSupport support) {
 	    if (!support.isDataFlavorSupported(DataFlavor.stringFlavor)) {
 	      return false;
@@ -80,12 +71,10 @@ package aoodp1.screens;
 	      return true;
 	    }
 	  }
-
 	  public boolean importData(TransferHandler.TransferSupport support) {
 	    if (!canImport(support)) {
 	      return false;
 	    }
-
 	    Transferable transferable = support.getTransferable();
 	    String indexString;
 	    try {
@@ -93,11 +82,9 @@ package aoodp1.screens;
 	    } catch (Exception e) {
 	      return false;
 	    }
-
 	    int index = Integer.parseInt(indexString);
 	    JList.DropLocation dl = (JList.DropLocation) support.getDropLocation();
 	    int dropTargetIndex = dl.getIndex();
-
 	    System.out.println(dropTargetIndex + " : ");
 	    System.out.println("inserted");
 	    return true;
