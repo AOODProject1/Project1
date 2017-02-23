@@ -67,6 +67,9 @@ public class MainScreen {
 		whereToSave = new File(Constants.FILEHEADER + username + "/ListData.tdl");
 		f = new JFrame();
 		JMenuItem save = new JMenuItem("Save");
+		JMenuItem saveAs = new JMenuItem("Save As...");
+		JMenuItem load = new JMenuItem("Load from File");
+		JMenuItem print = new JMenuItem("Print To Console");
 		JMenu sort = new JMenu("Sort");
 		JMenuItem sn = new JMenuItem("...By Name");
 		JMenu sd = new JMenu("...By Date");
@@ -110,7 +113,28 @@ public class MainScreen {
 		bar.add(quit);
 		bar.add(closedActionItems);
 		file.add(save);
+		file.add(saveAs);
+		file.add(load);
+		file.add(print);
 		save.addActionListener(new SaveListener());
+		saveAs.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//bring up a menu to select file
+				//save file at selected place
+			}
+		});
+		load.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//set to-dos as a file chosen by user
+			}
+		});
+		print.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				for (ActionItem item : toDos.toArray(new ActionItem[0])) {
+					System.out.println(item);
+				}
+			}
+		});
 		quit.addActionListener(new QuitListener());
 		f.setJMenuBar(bar);
 		JTextField newInputItem = new JTextField("Input An Item");
@@ -125,22 +149,17 @@ public class MainScreen {
 				}
 			}
 		});
-		newInputItem.addMouseListener(new MouseAdapter() { // Clears text field
-															// when clicked
+		newInputItem.addMouseListener(new MouseAdapter() { // Clears text field when clicked
 			public void mousePressed(MouseEvent e) {
 				((JTextField) e.getSource()).setText(null);
 			}
 		});
-		// f.pack();
 		items.setDragEnabled(true);
 		items.setDropMode(DropMode.INSERT);
 		items.setTransferHandler(new ListDrop());
 		new DragListener();
 		f.add(items, BorderLayout.CENTER);
 		f.setVisible(true);
-		// f.repaint();
-		// EditActionScreen.editActionItem(toDos.get(0)); //Test EditActionItem
-		// new ActionItem("Get groceries",Priority.URGENT)
 	}
 
 	public static void sortToDos() {
@@ -266,10 +285,6 @@ public class MainScreen {
 		}
 
 		public void dragDropEnd(DragSourceDropEvent dsde) {
-			if (dsde.getDropSuccess()) {
-				System.out.println("Succeeded");
-				// "repaint" items
-			}
 		}
 
 		public void dropActionChanged(DragSourceDragEvent dsde) {
@@ -296,11 +311,19 @@ public class MainScreen {
 				e.printStackTrace();
 			}
 			JList.DropLocation dl = (JList.DropLocation) support.getDropLocation();
+			
 			int sIndex = Integer.parseInt(indexString);
 			int eIndex = dl.getIndex();
-			System.out.println(eIndex + " : ");
-			System.out.println("inserted");
-			System.out.println(sIndex);
+			int moveIndex = sIndex>=eIndex?eIndex:eIndex-1;
+			ActionItem moved = toDos.remove(sIndex);
+			toDos.add(moveIndex, moved);
+			//change priority as necessary
+			if (toDos.get(moveIndex).getPriority().ordinal() < toDos.get(moveIndex - 1).getPriority().ordinal()) {
+				toDos.get(moveIndex).changePriority(toDos.get(moveIndex - 1).getPriority());
+			} else if (toDos.get(moveIndex).getPriority().ordinal() > toDos.get(moveIndex + 1).getPriority().ordinal()) {
+				toDos.get(moveIndex).changePriority(toDos.get(moveIndex + 1).getPriority());
+			}
+			updateList();
 			return true;
 		}
 	}
