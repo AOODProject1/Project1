@@ -39,6 +39,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
@@ -210,10 +211,21 @@ public class MainScreen {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (items.contains(e.getPoint())) {
+					if (e.getButton() == MouseEvent.BUTTON3) {
+						
+					}
 					if (e.getClickCount() == 2) {
 						EditActionScreen.editActionItem(items.getSelectedValue());
 					}
 				}
+				
+			}
+		}
+		private class pupUpMenu extends JPopupMenu{
+			JMenuItem item;
+			public void popUp(){
+				item = new JMenuItem("Options");
+				add(item);
 			}
 		}
 	}
