@@ -18,15 +18,15 @@ package aoodp1.screens;
 	import javax.swing.JScrollPane;
 	import javax.swing.TransferHandler;
 
-	public class DragDropList extends JList {
-	  public DragDropList() {
+	public class DragDropList<E> extends JList<E> {
+
+	  public DragDropList(E[] a) {
+	    super(a);
 	    setDragEnabled(true);
 	    setDropMode(DropMode.INSERT);
 	    setTransferHandler(new MyListDropHandler(this));
 	    new MyDragListener(this);
 	  }
-	}
-	
 	class MyDragListener implements DragSourceListener, DragGestureListener {
 	  DragDropList list;
 	  DragSource ds = new DragSource();
@@ -39,17 +39,16 @@ package aoodp1.screens;
 	    StringSelection transferable = new StringSelection(Integer.toString(list.getSelectedIndex()));
 	    ds.startDrag(dge, DragSource.DefaultCopyDrop, transferable, this);
 	  }
-	  public void dragEnter(DragSourceDragEvent dsde) {
-	  }
-	  public void dragExit(DragSourceEvent dse) {
-	  }
-	  public void dragOver(DragSourceDragEvent dsde) {
-	  }
+	  public void dragEnter(DragSourceDragEvent dsde) {}
+
+	  public void dragExit(DragSourceEvent dse) {}
+
+	  public void dragOver(DragSourceDragEvent dsde) {}
+	  
 	  public void dragDropEnd(DragSourceDropEvent dsde) {
 	    if (dsde.getDropSuccess()) {
 	      System.out.println("Succeeded");
-	    } else {
-	      System.out.println("Failed");
+	      //"repaint" items
 	    }
 	  }
 	  public void dropActionChanged(DragSourceDragEvent dsde) {
@@ -91,3 +90,4 @@ package aoodp1.screens;
 	    return true;
 	  }
 	}
+}
