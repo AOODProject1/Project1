@@ -11,8 +11,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -113,6 +115,11 @@ public class MainScreen {
 					items.setListData(toDos.toArray(new ActionItem[0]));
 					newInputItem.setText("");
 				}
+			}
+		});
+		newInputItem.addMouseListener(new MouseAdapter() { //Clears text field when clicked
+			public void mousePressed(MouseEvent e) {
+				((JTextField)e.getSource()).setText(null);
 			}
 		});
 		// f.pack();
