@@ -62,7 +62,7 @@ public class MainScreen {
 		private static File whereToSave=null;
 		private String username;
 		private static DragDropList<ActionItem> items;
-		private static int compOption=Constants.SORTBYNAME;
+		private static int compOption=Constants.SORTNOCARES;
 		private static Priority dateOption=Priority.URGENT;
 		public static void main(String[] args) {
 			new MainScreen("default");
@@ -130,7 +130,7 @@ public class MainScreen {
 			});
 	        //f.pack();
 			items.setDragEnabled(true);
-			f.add(items, BorderLayout.LINE_START);
+			f.add(items, BorderLayout.CENTER);
 			f.setVisible(true);
 			//f.repaint();
 			//EditActionScreen.editActionItem(toDos.get(0)); //Test EditActionItem
@@ -139,6 +139,12 @@ public class MainScreen {
 		public static void sortToDos() {
 			Collections.sort(toDos);
 			items.setListData(toDos.toArray(new ActionItem[0]));
+		}
+		public static void sortToDosByPriority() {
+			int prevPrio = compOption;
+			compOption = Constants.SORTNOCARES;
+			sortToDos();
+			compOption = prevPrio;
 		}
 		public static void updateList() {
 			items.setListData(toDos.toArray(new ActionItem[0]));
@@ -168,6 +174,12 @@ public class MainScreen {
 		private static class SaveAtClose extends WindowAdapter {
 			public void windowClosing(WindowEvent e) {
 				close();
+			}
+			public void windowOpened(WindowEvent e) {
+				for (ActionItem a : toDos.toArray(new ActionItem[0])) {
+					a.validateDates();
+					sortToDosByPriority();
+				}
 			}
 		}
 		private static class SaveListener implements ActionListener {

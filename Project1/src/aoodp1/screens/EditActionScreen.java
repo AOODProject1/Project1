@@ -123,6 +123,7 @@ public class EditActionScreen {
 		public void actionPerformed(ActionEvent e) {
 			String name = ((JRadioButton)e.getSource()).getText();
 			a.changePriority(Priority.toPriority(name));
+			MainScreen.sortToDosByPriority();
 		}
 	}
 	private static class PDateCBox implements ActionListener {

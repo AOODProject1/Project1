@@ -113,8 +113,11 @@ public class ActionItem implements Comparable<ActionItem> {
 			return p.ordinal() - o.getPriority().ordinal();
 		if (MainScreen.getComparason() == Constants.SORTBYNAME) {
 			return compareName(o);
+		} else if (MainScreen.getComparason() == Constants.SORTBYDATE) {
+			return compareDates(o,MainScreen.getDateOption());
+		} else {
+			return 0;
 		}
-		return compareDates(o,MainScreen.getDateOption());
 	}
 	/**
 	 * Compares ActionItems' names
