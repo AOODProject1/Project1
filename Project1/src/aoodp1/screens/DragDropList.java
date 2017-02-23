@@ -17,23 +17,24 @@ package aoodp1.screens;
 	import javax.swing.JList;
 	import javax.swing.JScrollPane;
 	import javax.swing.TransferHandler;
-
+	
+	@Deprecated
 	public class DragDropList<E> extends JList<E> {
+		private static final long serialVersionUID = -98360819352909216L;
 
-	  public DragDropList(E[] a) {
+	public DragDropList(E[] a) {
 	    super(a);
 	    setDragEnabled(true);
 	    setDropMode(DropMode.INSERT);
-	    setTransferHandler(new MyListDropHandler(this));
-	    new MyDragListener(this);
+	    setTransferHandler(new ListDrop(this));
+	    new DragListener(this);
 	  }
-	class MyDragListener implements DragSourceListener, DragGestureListener {
-	  DragDropList list;
+	private class DragListener implements DragSourceListener, DragGestureListener {
+	  DragDropList<E> list;
 	  DragSource ds = new DragSource();
-	  public MyDragListener(DragDropList list) {
+	  public DragListener(DragDropList<E> list) {
 	    this.list = list;
-	    DragGestureRecognizer dgr = ds.createDefaultDragGestureRecognizer(list,
-	        DnDConstants.ACTION_MOVE, this);
+	    ds.createDefaultDragGestureRecognizer(list,DnDConstants.ACTION_MOVE, this);
 	  }
 	  public void dragGestureRecognized(DragGestureEvent dge) {
 	    StringSelection transferable = new StringSelection(Integer.toString(list.getSelectedIndex()));
@@ -55,12 +56,10 @@ package aoodp1.screens;
 	  }
 	}
 
-	class MyListDropHandler extends TransferHandler {
-	  DragDropList list;
-	  public MyListDropHandler(DragDropList list) {
-	    this.list = list;
-	  }
-	  public boolean canImport(TransferHandler.TransferSupport support) {
+	private class ListDrop extends TransferHandler {
+		private static final long serialVersionUID = 1142577497098275366L;
+	public ListDrop(DragDropList<E> list) {}
+	  public boolean canImport(TransferSupport support) {/*
 	    if (!support.isDataFlavorSupported(DataFlavor.stringFlavor)) {
 	      return false;
 	    }
@@ -69,9 +68,10 @@ package aoodp1.screens;
 	      return false;
 	    } else {
 	      return true;
-	    }
+	    }*/
+		 return true;
 	  }
-	  public boolean importData(TransferHandler.TransferSupport support) {
+	  public boolean importData(TransferSupport support) {
 	    if (!canImport(support)) {
 	      return false;
 	    }
@@ -87,6 +87,7 @@ package aoodp1.screens;
 	    int dropTargetIndex = dl.getIndex();
 	    System.out.println(dropTargetIndex + " : ");
 	    System.out.println("inserted");
+	    System.out.println(index);
 	    return true;
 	  }
 	}
