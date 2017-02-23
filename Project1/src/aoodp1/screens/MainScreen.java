@@ -142,6 +142,9 @@ public class MainScreen {
 			Collections.sort(toDos);
 			items.setListData(toDos.toArray(new ActionItem[0]));
 		}
+		public static void updateList() {
+			items.setListData(toDos.toArray(new ActionItem[0]));
+		}
 		private static boolean close() {
 			int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to quit?", "Confirm Quit", JOptionPane.YES_NO_OPTION);
 			if (confirm == JOptionPane.NO_OPTION) return false;

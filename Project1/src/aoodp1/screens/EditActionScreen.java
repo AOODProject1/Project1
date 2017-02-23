@@ -116,6 +116,7 @@ public class EditActionScreen {
 	private static class TextEdit implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			a.changeName(((JTextField) e.getSource()).getText());
+			MainScreen.updateList();
 		}
 	}
 	private static class PriorityEdit implements ActionListener { //called when the radiobuttons are pressed to change priority
