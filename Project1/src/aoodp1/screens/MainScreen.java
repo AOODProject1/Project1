@@ -121,12 +121,10 @@ public class MainScreen {
 			newInputItem.addKeyListener(new KeyAdapter(){
 				public void keyPressed(KeyEvent e){
 					int key = e.getKeyCode();
-					int i = 0;
 					if(key == KeyEvent.VK_ENTER){
-						toDos.add(new ActionItem(newInputItem.getText(), Priority.URGENT));
+						toDos.add(0, new ActionItem(newInputItem.getText(), Priority.URGENT));
 						items.setListData(toDos.toArray(new ActionItem[0]));
 						newInputItem.setText("");
-						i++;
 					}
 				}
 			});
@@ -207,27 +205,12 @@ public class MainScreen {
 				dragSourceIndex = items.getSelectedIndex();
 			}
 			@Override
-			public void mouseReleased(MouseEvent e) {
-				if(mouseDrag){
-					int dragTargetIndex = items.getSelectedIndex();
-					ActionItem dragElement = toDos.get(dragSourceIndex);
-					toDos.remove(dragSourceIndex);
-					toDos.add(dragTargetIndex, dragElement);
-				}
-				mouseDrag = false;
-			}
-			
-			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (items.contains(e.getPoint())) {
 					if (e.getClickCount() == 2) {
 						EditActionScreen.editActionItem(items.getSelectedValue());
 					}
 				}
-			}
-			@Override
-			public void mouseDragged(MouseEvent e){
-				mouseDrag = true;
 			}
 		}
 	}
