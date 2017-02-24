@@ -1,6 +1,8 @@
 package aoodp1.screens;
 
 import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
@@ -45,6 +47,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.TransferHandler;
 import javax.swing.event.MouseInputAdapter;
@@ -197,6 +200,10 @@ public class MainScreen {
 		items.setDragEnabled(true);
 		items.setDropMode(DropMode.INSERT);
 		items.setTransferHandler(new MainScreen.ListDrop());
+		JScrollPane pane = new JScrollPane(items);
+		Container contentPane = f.getContentPane();
+		contentPane.add(pane, BorderLayout.CENTER);
+		f.getContentPane().add(pane, BorderLayout.EAST);
 		new MainScreen.DragListener();
 		f.add(items, BorderLayout.CENTER);
 		f.setVisible(true);
