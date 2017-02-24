@@ -32,11 +32,13 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import javax.swing.BoxLayout;
 import javax.swing.DropMode;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -282,9 +284,11 @@ public class MainScreen {
 		public void mouseClicked(MouseEvent e) {
 			if (items.contains(e.getPoint())) {
 				if (e.getButton() == MouseEvent.BUTTON3) {
+					((JList)e.getSource()).setSelectedIndex(((JList)e.getSource()).locationToIndex(e.getPoint())); //select right-click point
 					JDialog aiMenu = new JDialog();
-					int selected = items.getSelectedIndex();
+					int selected = items.getSelectedIndex(); //so that user can't change selected index
 					aiMenu.setTitle("Action Item Options");
+					JLabel name = new JLabel("ActionItem: " + toDos.get(selected).toString());
 					JButton delete = new JButton("Delete Action Item");
 					JButton edit = new JButton("Edit Action Item");
 					JButton complete = new JButton("Set to Completed");
@@ -304,7 +308,10 @@ public class MainScreen {
 					buttons.add(delete);
 					//buttons.add(edit);
 					buttons.add(complete);
+					buttons.setLayout(new BoxLayout(buttons,BoxLayout.Y_AXIS));
+					aiMenu.add(name);
 					aiMenu.add(buttons);
+					aiMenu.setLayout(new BoxLayout(aiMenu.getContentPane(), BoxLayout.Y_AXIS));
 					aiMenu.pack();
 					aiMenu.setVisible(true);
 				} else if (e.getClickCount() == 2) {
