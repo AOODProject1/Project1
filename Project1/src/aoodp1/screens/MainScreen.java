@@ -31,6 +31,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.ListIterator;
 
 import javax.swing.BoxLayout;
 import javax.swing.DropMode;
@@ -61,7 +63,8 @@ public class MainScreen {
 	private static final JFrame f = new JFrame("ToDo List");
 
 	private static ArrayList<ActionItem> toDos = new ArrayList<ActionItem>();
-	private static File whereToSave = null;
+	private static ArrayList<ActionItem> completedToDos = new ArrayList<ActionItem>();
+	private static File whereToSave = null,completedSave=null;
 	private static String username;
 	private static JList<ActionItem> items;
 	private static int compOption = Constants.SORTNOCARES;
@@ -74,6 +77,7 @@ public class MainScreen {
 	public static void show(String user) {
 		username = user;
 		whereToSave = new File(Constants.FILEHEADER + username + "/ListData.tdl");
+		completedSave = new File(Constants.FILEHEADER + username + "/Completed.ctdl");
 		JMenuItem save = new JMenuItem("Save");
 		JMenuItem saveAs = new JMenuItem("Save As...");
 		JMenuItem load = new JMenuItem("Load from File");
@@ -176,6 +180,12 @@ public class MainScreen {
 			}
 		});
 		quit.addActionListener(new QuitListener());
+		closedActionItems.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				loadClosedActionItems();
+				JOptionPane.showMessageDialog(f, completedToDos, "Closed ActionItems", JOptionPane.OK_CANCEL_OPTION);
+			}
+		});
 		f.setJMenuBar(bar);
 		JTextField newInputItem = new JTextField("Input An Item");
 		f.add(newInputItem, BorderLayout.SOUTH);
@@ -205,6 +215,7 @@ public class MainScreen {
 	public static void sortToDos() {
 		Collections.sort(toDos);
 		items.setListData(toDos.toArray(new ActionItem[0]));
+		cleanToDos();
 	}
 
 	public static void sortToDosByPriority() {
@@ -212,12 +223,40 @@ public class MainScreen {
 		compOption = Constants.SORTNOCARES;
 		sortToDos();
 		compOption = prevPrio;
+		cleanToDos();
 	}
 
 	public static void updateList() {
 		items.setListData(toDos.toArray(new ActionItem[0]));
 	}
-
+	/**
+	 * Removes any items marked completed and puts them in completedToDos.
+	 */
+	public static void cleanToDos() {
+		for (int i=0;i<toDos.size();i++) {
+			if (toDos.get(i).getPriority() == Priority.COMPLETED) {
+				completedToDos.add(0,toDos.get(i));
+				i--;
+			}
+		}
+	}
+	public static void loadClosedActionItems() {
+		try (ObjectInputStream o = new ObjectInputStream(new FileInputStream(completedSave))) {
+			ArrayList<ActionItem> userToDo = (ArrayList<ActionItem>)o.readObject();
+			completedToDos = userToDo;
+			updateList();
+		} catch (FileNotFoundException x) {
+			JOptionPane.showMessageDialog(f, "File not found", "Error", JOptionPane.ERROR_MESSAGE);
+		} catch (IOException x) {
+			JOptionPane.showMessageDialog(f, "Items not found (IOException)", "Error", JOptionPane.ERROR_MESSAGE);
+		} catch (ClassNotFoundException x) {
+			JOptionPane.showMessageDialog(f, "File Blank/Corrupted (ClassNotFoundException)", "Error", JOptionPane.ERROR_MESSAGE);
+		} catch (ClassCastException x) {
+			JOptionPane.showMessageDialog(f, "File Blank/Corrupted (ClassCastException)", "Error", JOptionPane.ERROR_MESSAGE);
+		} catch (Exception x) {
+			JOptionPane.showMessageDialog(f, "Unexpected Error", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
 	private static void close() {
 		int confirm = JOptionPane.showConfirmDialog(f, "Are you sure you want to quit?", "Confirm Quit",
 				JOptionPane.YES_NO_OPTION);
@@ -225,12 +264,13 @@ public class MainScreen {
 			return;
 		if (whereToSave == null)
 			System.exit(0);
-		try {
+		try (ObjectOutputStream p = new ObjectOutputStream(new FileOutputStream(whereToSave));
+			 ObjectOutputStream c = new ObjectOutputStream(new FileOutputStream(completedSave))){
 			whereToSave.getParentFile().mkdirs();
 			whereToSave.createNewFile();
-			ObjectOutputStream p = new ObjectOutputStream(new FileOutputStream(whereToSave));
+			completedSave.createNewFile();
 			p.writeObject(toDos);
-			p.close();
+			c.writeObject(completedToDos);
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 		} catch (IOException e1) {
