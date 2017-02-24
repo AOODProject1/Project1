@@ -53,6 +53,7 @@ import javax.swing.event.MouseInputAdapter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import aoodp1.item.ActionItem;
+import aoodp1.item.CompletedItem;
 import aoodp1.item.Priority;
 import aoodp1.util.Constants;
 
@@ -63,7 +64,7 @@ public class MainScreen {
 	private static final JFrame f = new JFrame("ToDo List");
 
 	private static ArrayList<ActionItem> toDos = new ArrayList<ActionItem>();
-	private static ArrayList<ActionItem> completedToDos = new ArrayList<ActionItem>();
+	private static ArrayList<CompletedItem> completedToDos = new ArrayList<CompletedItem>();
 	private static File whereToSave = null,completedSave=null;
 	private static String username;
 	private static JList<ActionItem> items;
@@ -183,7 +184,12 @@ public class MainScreen {
 		closedActionItems.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				loadClosedActionItems();
-				JOptionPane.showMessageDialog(f, completedToDos, "Closed ActionItems", JOptionPane.OK_CANCEL_OPTION);
+				String items = "";
+				for (ActionItem a : completedToDos) {
+					items += a + "\n";
+				}
+				JOptionPane.showMessageDialog(f, items, "Closed ActionItems", JOptionPane.OK_CANCEL_OPTION);
+				items="";
 			}
 		});
 		f.setJMenuBar(bar);
@@ -235,15 +241,15 @@ public class MainScreen {
 	public static void cleanToDos() {
 		for (int i=0;i<toDos.size();i++) {
 			if (toDos.get(i).getPriority() == Priority.COMPLETED) {
-				completedToDos.add(0,toDos.get(i));
+				completedToDos.add(0,new CompletedItem(toDos.remove(i)));
 				i--;
 			}
 		}
 	}
 	public static void loadClosedActionItems() {
 		try (ObjectInputStream o = new ObjectInputStream(new FileInputStream(completedSave))) {
-			ArrayList<ActionItem> userToDo = (ArrayList<ActionItem>)o.readObject();
-			completedToDos = userToDo;
+			ArrayList<CompletedItem> userToDo = (ArrayList<CompletedItem>)o.readObject();
+			completedToDos.addAll(userToDo);
 			updateList();
 		} catch (FileNotFoundException x) {
 			JOptionPane.showMessageDialog(f, "File not found", "Error", JOptionPane.ERROR_MESSAGE);

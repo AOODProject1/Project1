@@ -11,25 +11,25 @@ import java.time.LocalDate;
 
 public class ActionItem implements Comparable<ActionItem>, Serializable {
 	private static final long serialVersionUID = 5418447856094847813L;
-	private String s; //Name
-	private Priority p;
-	private String comment;
-	private ArrayList<String> history;
-	private PriorityDate dates[];
-	public ActionItem(String s) {
-		this.s=s;
+	protected String name;
+	protected Priority p;
+	protected String comment;
+	protected ArrayList<String> history;
+	protected PriorityDate dates[];
+	public ActionItem(String name) {
+		this.name=name;
 		this.p=Priority.URGENT;
 		history = new ArrayList<String>();
 		dates = new PriorityDate[3];
 	}
-	public ActionItem(String s,Priority p) {
-		this.s=s;
+	public ActionItem(String name,Priority p) {
+		this.name=name;
 		this.p=p;
 		history = new ArrayList<String>();
 		dates = new PriorityDate[3];
 	}
 	public String getName() {
-		return s;
+		return name;
 	}
 	public Priority getPriority() {
 		return p;
@@ -56,9 +56,14 @@ public class ActionItem implements Comparable<ActionItem>, Serializable {
 		String time = new Timestamp(System.currentTimeMillis()).toString();
 		history.add(0, "[" + time.substring(0, time.indexOf(".")) + "] " + message);
 	}
+	public void appendHistory(String[] message) {
+		for (String h : message) {
+			history.add(h);
+		}
+	}
 	public void changeName(String name) {
-		addHistory("Name changed from \"" + s + "\" to \"" +  name + "\"");
-		s=name;
+		addHistory("Name changed from \"" + this.name + "\" to \"" +  name + "\"");
+		this.name=name;
 	}
 	public void changeComment(String comment) {
 		addHistory("Comment changed from \"" + this.comment + "\" to \"" + comment + "\"");
