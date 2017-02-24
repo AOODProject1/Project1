@@ -129,13 +129,37 @@ public class MainScreen {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser getSaveFile = new JFileChooser(Constants.FILEHEADER);
 				getSaveFile.addChoosableFileFilter(new FileNameExtensionFilter("ToDoList file",".tdl"));
-				getSaveFile.showOpenDialog(f);
+				if (getSaveFile.showSaveDialog(f) == JFileChooser.APPROVE_OPTION) {
+					File saveLoc = new File(getSaveFile.getSelectedFile().getAbsolutePath() +".tdl");
+					saveLoc.getParentFile().mkdirs();
+					try (ObjectOutputStream p = new ObjectOutputStream(new FileOutputStream(saveLoc))){
+						saveLoc.createNewFile();
+						p.writeObject(toDos);
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
 				//bring up a menu to select file
 				//save file at selected place
 			}
 		});
 		load.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				JFileChooser getLoadFile = new JFileChooser(Constants.FILEHEADER);
+				getLoadFile.addChoosableFileFilter(new FileNameExtensionFilter("ToDoList file",".tdl"));
+				if (getLoadFile.showOpenDialog(f) == JFileChooser.APPROVE_OPTION) {
+					File saveLoc = new File(getLoadFile.getSelectedFile().getAbsolutePath() +".tdl");
+					saveLoc.getParentFile().mkdirs();
+					try (ObjectInputStream p = new ObjectInputStream(new FileInputStream(saveLoc))){
+						saveLoc.createNewFile();
+						toDos = ((ArrayList<ActionItem>)(p.readObject()));
+						updateList();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					} catch (ClassNotFoundException e1) {
+						e1.printStackTrace();
+					}
+				}
 				//set to-dos as a file chosen by user
 			}
 		});
