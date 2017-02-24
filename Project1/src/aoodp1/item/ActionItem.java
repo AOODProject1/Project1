@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import aoodp1.screens.MainScreen;
 import aoodp1.util.Constants;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
-public class ActionItem implements Comparable<ActionItem> {
+public class ActionItem implements Comparable<ActionItem>, Serializable {
+	private static final long serialVersionUID = 5418447856094847813L;
 	private String s; //Name
 	private Priority p;
 	private String comment;
