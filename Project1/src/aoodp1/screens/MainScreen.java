@@ -193,11 +193,13 @@ public class MainScreen {
 				String items = null;
 				for (ActionItem a : completedToDos) {
 					if (a==null) continue;
-					if (items == null) items=a.toString();
-					items += a + "\n";
+					if (items == null) {
+						items=a.toString()+"\n";
+					} else {
+						items += a + "\n";
+					}
 				}
 				JOptionPane.showMessageDialog(f, items, "Closed ActionItems", JOptionPane.OK_CANCEL_OPTION);
-				items="";
 			}
 		});
 		f.setJMenuBar(bar);
@@ -258,7 +260,6 @@ public class MainScreen {
 		try (ObjectInputStream o = new ObjectInputStream(new FileInputStream(completedSave))) {
 			ArrayList<CompletedItem> userToDo = (ArrayList<CompletedItem>)o.readObject();
 			completedToDos.addAll(userToDo);
-			updateList();
 		} catch (FileNotFoundException x) {
 			JOptionPane.showMessageDialog(f, "File not found", "Error", JOptionPane.ERROR_MESSAGE);
 		} catch (IOException x) {
