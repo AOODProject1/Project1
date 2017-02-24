@@ -1,4 +1,5 @@
 package aoodp1.screens;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -16,10 +17,12 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import aoodp1.util.Constants;
-public class LoginScreen {//extends JFrame{
+
+public class LoginScreen {// extends JFrame{
 	private static JFrame f = new JFrame("Login Screen");
 	private static JPanel p;
-	public static void main(String[] args){
+
+	public static void main(String[] args) {
 		p = new JPanel();
 		f.setSize(500, 500);
 		f.add(p);
@@ -30,15 +33,15 @@ public class LoginScreen {//extends JFrame{
 		password.setBounds(200, 100, 150, 50);
 		JButton login = new JButton("Login");
 		user.addMouseListener(new MouseAdapter() {
-				public void mousePressed(MouseEvent e) {
-					((JTextField) e.getSource()).setText(null);
-				}
-			});
+			public void mousePressed(MouseEvent e) {
+				((JTextField) e.getSource()).setText(null);
+			}
+		});
 		password.addMouseListener(new MouseAdapter() {
-				public void mousePressed(MouseEvent e) {
-					((JTextField) e.getSource()).setText(null);
-				}
-			});
+			public void mousePressed(MouseEvent e) {
+				((JTextField) e.getSource()).setText(null);
+			}
+		});
 		login.setSize(50, 10);
 		p.add(user);
 		p.add(password);
@@ -47,40 +50,42 @@ public class LoginScreen {//extends JFrame{
 		f.pack();
 		f.setVisible(true);
 	}
+
 	private static class LoginButton implements ActionListener {
 		JTextField user;
 		JTextField password;
-		public LoginButton(JTextField u, JTextField p){
+
+		public LoginButton(JTextField u, JTextField p) {
 			user = u;
 			password = p;
 		}
+
 		public void actionPerformed(ActionEvent e) {
-			Scanner s = null;
-				if(new File(Constants.FILEHEADER + user.getText() + "/").exists()){
-					try {
-						s = new Scanner(new File(Constants.FILEHEADER + user.getText() + "/password.txt"));
-					} catch (FileNotFoundException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+			if (new File(Constants.FILEHEADER + user.getText() + "/").exists()) {
+				try (Scanner s = new Scanner(new File(Constants.FILEHEADER + user.getText() + "/password.txt"))){
+					if (password.getText().equals(s.nextLine())) {
+						MainScreen.show(user.getText());
+						f.dispose();
 					}
-					if(password.getText().equals(s.nextLine())){
-					MainScreen.show(user.getText());
-					f.dispose();
-					}
-				} else {
-					int y = JOptionPane.showConfirmDialog(null, "Do you want to make a new user?");
-					if(y == JOptionPane.YES_OPTION){
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			} else {
+				int y = JOptionPane.showConfirmDialog(null, "Do you want to make a new user?");
+				if (y == JOptionPane.YES_OPTION) {
 					new File(Constants.FILEHEADER + user.getText() + "/").mkdirs();
-					try{
-					new PrintStream(new File(Constants.FILEHEADER + user.getText() + "/password.txt")).print(password.getText());
-					}catch (FileNotFoundException x){
+					try {
+						new PrintStream(new File(Constants.FILEHEADER + user.getText() + "/password.txt"))
+								.print(password.getText());
+					} catch (FileNotFoundException x) {
 						System.err.println(x.getLocalizedMessage());
 					}
 					MainScreen.show(user.getText());
 					f.dispose();
-					}
+				}
 			}
-			
+
 		}
 	}
 }
