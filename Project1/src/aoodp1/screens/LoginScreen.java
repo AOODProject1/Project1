@@ -1,6 +1,9 @@
 package aoodp1.screens;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
@@ -26,6 +29,16 @@ public class LoginScreen {//extends JFrame{
 		user.setBounds(100, 100, 150, 50);
 		password.setBounds(200, 100, 150, 50);
 		JButton login = new JButton("Login");
+		user.addMouseListener(new MouseAdapter() {
+				public void mousePressed(MouseEvent e) {
+					((JTextField) e.getSource()).setText(null);
+				}
+			});
+		password.addMouseListener(new MouseAdapter() {
+				public void mousePressed(MouseEvent e) {
+					((JTextField) e.getSource()).setText(null);
+				}
+			});
 		login.setSize(50, 10);
 		p.add(user);
 		p.add(password);
