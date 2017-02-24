@@ -29,6 +29,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -70,6 +71,7 @@ public class MainScreen {
 	private static JList<ActionItem> items;
 	private static int compOption = Constants.SORTNOCARES;
 	private static Priority dateOption = Priority.URGENT;
+	private static boolean closedLoaded =false;
 
 	public static void main(String[] args) {
 		show("default");
@@ -182,10 +184,16 @@ public class MainScreen {
 		});
 		quit.addActionListener(new QuitListener());
 		closedActionItems.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent e) {
-				loadClosedActionItems();
-				String items = "";
+				if (!closedLoaded) {
+					loadClosedActionItems();
+					closedLoaded=true;
+				}
+				String items = null;
 				for (ActionItem a : completedToDos) {
+					if (a==null) continue;
+					if (items == null) items=a.toString();
 					items += a + "\n";
 				}
 				JOptionPane.showMessageDialog(f, items, "Closed ActionItems", JOptionPane.OK_CANCEL_OPTION);
@@ -241,7 +249,7 @@ public class MainScreen {
 	public static void cleanToDos() {
 		for (int i=0;i<toDos.size();i++) {
 			if (toDos.get(i).getPriority() == Priority.COMPLETED) {
-				completedToDos.add(0,new CompletedItem(toDos.remove(i)));
+				completedToDos.add(0,new CompletedItem(toDos.remove(i),LocalDate.now()));
 				i--;
 			}
 		}
