@@ -190,7 +190,7 @@ public class MainScreen {
 	}
 
 	private static void close() {
-		int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to quit?", "Confirm Quit",
+		int confirm = JOptionPane.showConfirmDialog(f, "Are you sure you want to quit?", "Confirm Quit",
 				JOptionPane.YES_NO_OPTION);
 		if (confirm == JOptionPane.NO_OPTION) // person doesn't want to leave
 			return;
@@ -294,9 +294,11 @@ public class MainScreen {
 					JButton complete = new JButton("Set to Completed");
 					delete.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							toDos.remove(items.getSelectedIndex());
-							updateList();
-							aiMenu.dispose();
+							if (JOptionPane.showConfirmDialog(aiMenu, "Are you sure?", "Confirmation of Deletion", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+								toDos.remove(items.getSelectedIndex());
+								updateList();
+								aiMenu.dispose();
+							}
 						}
 					});
 					complete.addActionListener(new ActionListener() {
