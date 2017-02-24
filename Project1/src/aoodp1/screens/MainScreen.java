@@ -128,9 +128,14 @@ public class MainScreen {
 		saveAs.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser getSaveFile = new JFileChooser(Constants.FILEHEADER);
-				getSaveFile.addChoosableFileFilter(new FileNameExtensionFilter("ToDoList file",".tdl"));
+				//getSaveFile.addChoosableFileFilter(new FileNameExtensionFilter("ToDoList file",".tdl"));
 				if (getSaveFile.showSaveDialog(f) == JFileChooser.APPROVE_OPTION) {
-					File saveLoc = new File(getSaveFile.getSelectedFile().getAbsolutePath() +".tdl");
+					File saveLoc;
+					if (getSaveFile.getSelectedFile().getAbsolutePath().endsWith(".tdl")) {
+						saveLoc = getSaveFile.getSelectedFile();
+					} else {
+						saveLoc = new File(getSaveFile.getSelectedFile().getAbsolutePath() +".tdl");
+					}
 					saveLoc.getParentFile().mkdirs();
 					try (ObjectOutputStream p = new ObjectOutputStream(new FileOutputStream(saveLoc))){
 						saveLoc.createNewFile();
@@ -146,9 +151,9 @@ public class MainScreen {
 		load.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser getLoadFile = new JFileChooser(Constants.FILEHEADER);
-				getLoadFile.addChoosableFileFilter(new FileNameExtensionFilter("ToDoList file",".tdl"));
+				//getLoadFile.addChoosableFileFilter(new FileNameExtensionFilter("ToDoList file",".tdl"));
 				if (getLoadFile.showOpenDialog(f) == JFileChooser.APPROVE_OPTION) {
-					File saveLoc = new File(getLoadFile.getSelectedFile().getAbsolutePath() +".tdl");
+					File saveLoc = new File(getLoadFile.getSelectedFile().getAbsolutePath());
 					saveLoc.getParentFile().mkdirs();
 					try (ObjectInputStream p = new ObjectInputStream(new FileInputStream(saveLoc))){
 						saveLoc.createNewFile();
