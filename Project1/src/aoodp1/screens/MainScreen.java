@@ -33,6 +33,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import javax.swing.DropMode;
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JList;
@@ -40,6 +42,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.TransferHandler;
 import javax.swing.event.MouseInputAdapter;
@@ -278,7 +281,33 @@ public class MainScreen {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			if (items.contains(e.getPoint())) {
-				if (e.getClickCount() == 2) {
+				if (e.getButton() == MouseEvent.BUTTON3) {
+					JDialog aiMenu = new JDialog();
+					int selected = items.getSelectedIndex();
+					aiMenu.setTitle("Action Item Options");
+					JButton delete = new JButton("Delete Action Item");
+					JButton edit = new JButton("Edit Action Item");
+					JButton complete = new JButton("Set to Completed");
+					delete.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							toDos.remove(items.getSelectedIndex());
+							updateList();
+						}
+					});
+					complete.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							toDos.get(selected).changePriority(Priority.COMPLETED);
+							sortToDosByPriority();
+						}
+					});
+					JPanel buttons = new JPanel();
+					buttons.add(delete);
+					//buttons.add(edit);
+					buttons.add(complete);
+					aiMenu.add(buttons);
+					aiMenu.pack();
+					aiMenu.setVisible(true);
+				} else if (e.getClickCount() == 2) {
 					EditActionScreen.editActionItem(items.getSelectedValue());
 				}
 			}
