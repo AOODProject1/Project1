@@ -51,7 +51,7 @@ public class LoginScreen {//extends JFrame{
 						e1.printStackTrace();
 					}
 					if(password.getText().equals(s.nextLine())){
-					new MainScreen(user.getText());
+					MainScreen.show(user.getText());
 					f.dispose();
 					}
 				} else {
@@ -63,7 +63,7 @@ public class LoginScreen {//extends JFrame{
 					}catch (FileNotFoundException x){
 						System.err.println(x.getLocalizedMessage());
 					}
-					new MainScreen(user.getText());
+					MainScreen.show(user.getText());
 					f.dispose();
 					}
 			}

@@ -23,14 +23,17 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 
 import javax.swing.DropMode;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JMenu;
@@ -40,6 +43,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.TransferHandler;
 import javax.swing.event.MouseInputAdapter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import aoodp1.item.ActionItem;
 import aoodp1.item.Priority;
@@ -49,23 +53,22 @@ import aoodp1.util.Constants;
 //http://codeidol.com/java/swing/Lists-and-Combos/Reorder-a-JList-with-Drag-and-Drop/
 public class MainScreen {
 
-	private static JFrame f;
+	private static final JFrame f = new JFrame("ToDo List");
 
 	private static ArrayList<ActionItem> toDos = new ArrayList<ActionItem>();
 	private static File whereToSave = null;
-	private String username;
+	private static String username;
 	private static JList<ActionItem> items;
 	private static int compOption = Constants.SORTNOCARES;
 	private static Priority dateOption = Priority.URGENT;
 
 	public static void main(String[] args) {
-		new MainScreen("default");
+		show("default");
 	}
 
-	public MainScreen(String user) {
-		this.username = user;
+	public static void show(String user) {
+		username = user;
 		whereToSave = new File(Constants.FILEHEADER + username + "/ListData.tdl");
-		f = new JFrame();
 		JMenuItem save = new JMenuItem("Save");
 		JMenuItem saveAs = new JMenuItem("Save As...");
 		JMenuItem load = new JMenuItem("Load from File");
@@ -119,6 +122,9 @@ public class MainScreen {
 		save.addActionListener(new SaveListener());
 		saveAs.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				JFileChooser getSaveFile = new JFileChooser(Constants.FILEHEADER);
+				getSaveFile.addChoosableFileFilter(new FileNameExtensionFilter("ToDoList file",".tdl"));
+				getSaveFile.showOpenDialog(f);
 				//bring up a menu to select file
 				//save file at selected place
 			}
@@ -156,8 +162,8 @@ public class MainScreen {
 		});
 		items.setDragEnabled(true);
 		items.setDropMode(DropMode.INSERT);
-		items.setTransferHandler(new ListDrop());
-		new DragListener();
+		items.setTransferHandler(new MainScreen.ListDrop());
+		new MainScreen.DragListener();
 		f.add(items, BorderLayout.CENTER);
 		f.setVisible(true);
 	}
@@ -212,6 +218,22 @@ public class MainScreen {
 		}
 
 		public void windowOpened(WindowEvent e) {
+			File userdir = new File(Constants.FILEHEADER + username + "/ListData.tdl");
+			try (ObjectInputStream o = new ObjectInputStream(new FileInputStream(userdir))) {
+				ArrayList<ActionItem> userToDo = (ArrayList<ActionItem>)o.readObject();
+				toDos = userToDo;
+				updateList();
+			} catch (FileNotFoundException x) {
+				JOptionPane.showMessageDialog(f, "Items not found", "Error", JOptionPane.ERROR_MESSAGE);
+			} catch (IOException x) {
+				JOptionPane.showMessageDialog(f, "Items not found", "Error", JOptionPane.ERROR_MESSAGE);
+			} catch (ClassNotFoundException x) {
+				JOptionPane.showMessageDialog(f, "File Blank/Corrupted", "Error", JOptionPane.ERROR_MESSAGE);
+			} catch (ClassCastException x) {
+				JOptionPane.showMessageDialog(f, "File Blank/Corrupted", "Error", JOptionPane.ERROR_MESSAGE);
+			} catch (Exception x) {
+				JOptionPane.showMessageDialog(f, "Unexpected Error", "Error", JOptionPane.ERROR_MESSAGE);
+			}
 			for (ActionItem a : toDos.toArray(new ActionItem[0])) {
 				a.validateDates();
 				sortToDosByPriority();
@@ -263,7 +285,7 @@ public class MainScreen {
 		}
 	}
 
-	private class DragListener implements DragSourceListener, DragGestureListener {
+	private static class DragListener implements DragSourceListener, DragGestureListener {
 		private DragSource ds = new DragSource();
 
 		public DragListener() {
@@ -291,7 +313,7 @@ public class MainScreen {
 		}
 	}
 
-	private class ListDrop extends TransferHandler {
+	private static class ListDrop extends TransferHandler {
 		private static final long serialVersionUID = 1142577497098275366L;
 
 		public boolean canImport(TransferSupport support) {
