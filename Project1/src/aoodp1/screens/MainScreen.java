@@ -229,13 +229,13 @@ public class MainScreen {
 				toDos = userToDo;
 				updateList();
 			} catch (FileNotFoundException x) {
-				JOptionPane.showMessageDialog(f, "Items not found", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(f, "File not found", "Error", JOptionPane.ERROR_MESSAGE);
 			} catch (IOException x) {
-				JOptionPane.showMessageDialog(f, "Items not found", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(f, "Items not found (IOException)", "Error", JOptionPane.ERROR_MESSAGE);
 			} catch (ClassNotFoundException x) {
-				JOptionPane.showMessageDialog(f, "File Blank/Corrupted", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(f, "File Blank/Corrupted (ClassNotFoundException)", "Error", JOptionPane.ERROR_MESSAGE);
 			} catch (ClassCastException x) {
-				JOptionPane.showMessageDialog(f, "File Blank/Corrupted", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(f, "File Blank/Corrupted (ClassCastException)", "Error", JOptionPane.ERROR_MESSAGE);
 			} catch (Exception x) {
 				JOptionPane.showMessageDialog(f, "Unexpected Error", "Error", JOptionPane.ERROR_MESSAGE);
 			}
