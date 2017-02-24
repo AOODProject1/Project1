@@ -296,6 +296,7 @@ public class MainScreen {
 						public void actionPerformed(ActionEvent e) {
 							toDos.remove(items.getSelectedIndex());
 							updateList();
+							aiMenu.dispose();
 						}
 					});
 					complete.addActionListener(new ActionListener() {
@@ -308,10 +309,10 @@ public class MainScreen {
 					buttons.add(delete);
 					//buttons.add(edit);
 					buttons.add(complete);
-					buttons.setLayout(new BoxLayout(buttons,BoxLayout.Y_AXIS));
+					buttons.setLayout(new BoxLayout(buttons,BoxLayout.X_AXIS));
 					aiMenu.add(name);
 					aiMenu.add(buttons);
-					aiMenu.setLayout(new BoxLayout(aiMenu.getContentPane(), BoxLayout.Y_AXIS));
+					aiMenu.setLayout(new BoxLayout(aiMenu.getContentPane(), BoxLayout.X_AXIS));
 					aiMenu.pack();
 					aiMenu.setVisible(true);
 				} else if (e.getClickCount() == 2) {
