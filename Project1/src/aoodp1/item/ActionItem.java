@@ -44,7 +44,7 @@ public class ActionItem implements Comparable<ActionItem>, Serializable {
 		for (int i=0;i<3;i++) {
 			if (dates[i]==null) continue;
 			if (dates[i].getDate().isBefore(LocalDate.now())) {
-				if (p.ordinal() < i) {
+				if (p.ordinal() > i) {
 					addHistory("Priority changed from \"" + p + "\" to \"" + Priority.values()[i] + "\" because date passed");
 					p = Priority.values()[i];
 					
