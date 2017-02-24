@@ -33,6 +33,7 @@ public class EditActionScreen {
 		editActionItem(new ActionItem("лю",Priority.CURRENT));
 	}
 	public static void editActionItem(ActionItem ai) {
+		if (ai == null) return;
 		a=ai;
 		JFrame f = new JFrame("Edit Item");
 		JPanel pB = new JPanel(); //The radio buttons for priorities
