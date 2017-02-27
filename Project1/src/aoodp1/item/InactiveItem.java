@@ -25,6 +25,6 @@ public class InactiveItem extends ActionItem{
 		}
 	}
 	public String toString() {
-		return dateActive + super.toString();
+		return dateActive + " " + super.toString();
 	}
 }
