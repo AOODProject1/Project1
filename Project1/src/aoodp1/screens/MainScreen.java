@@ -32,8 +32,6 @@ import java.io.ObjectOutputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
-import java.util.ListIterator;
 
 import javax.swing.BoxLayout;
 import javax.swing.DropMode;
@@ -51,7 +49,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.TransferHandler;
 import javax.swing.event.MouseInputAdapter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import aoodp1.item.ActionItem;
 import aoodp1.item.CompletedItem;
