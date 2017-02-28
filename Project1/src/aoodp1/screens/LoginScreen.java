@@ -75,9 +75,9 @@ public class LoginScreen {// extends JFrame{
 				int y = JOptionPane.showConfirmDialog(null, "Do you want to make a new user?");
 				if (y == JOptionPane.YES_OPTION) {
 					new File(Constants.FILEHEADER + user.getText() + "/").mkdirs();
-					try {
-						new PrintStream(new File(Constants.FILEHEADER + user.getText() + "/password.txt"))
-								.print(password.getText());
+					try (PrintStream p = new PrintStream(new File(Constants.FILEHEADER + user.getText() + "/password.txt"))){
+						p.print(password.getText());
+						
 					} catch (FileNotFoundException x) {
 						System.err.println(x.getLocalizedMessage());
 					}
