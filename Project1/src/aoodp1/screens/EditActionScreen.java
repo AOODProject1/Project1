@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -13,7 +14,9 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -23,29 +26,36 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import aoodp1.item.ActionItem;
+import aoodp1.item.InactiveItem;
 import aoodp1.item.Priority;
 
 public class EditActionScreen {
 	private static final String COMMENT="Comment",HISTORY="History",PRINT="Print to Console";
 	private static ActionItem a;
 	private static JTextField[] dates;
+	private static JFrame f;
+	private static JPanel pD=new JPanel(), //The dates and checkboxes and buttons
+			dateActive=new JPanel();
+	private static JTextField activeDate = new JTextField("YYYY-MM-DD");
 	public static void main(String[] args) {
 		editActionItem(new ActionItem("лю",Priority.CURRENT));
 	}
 	public static void editActionItem(ActionItem ai) {
+		f = new JFrame("Edit Item");
+		pD = new JPanel();
+		dateActive = new JPanel();
+		activeDate = new JTextField("YYYY-MM-DD");
 		if (ai == null) return;
 		a=ai;
-		JFrame f = new JFrame("Edit Item");
 		JPanel pB = new JPanel(); //The radio buttons for priorities
-		JPanel pD = new JPanel(); //The dates and checkboxes and buttons
 		JPanel[] d = new JPanel[3]; //the date/checkbox combos
-		
 		for (int i=0;i<d.length;i++) { //date/checkbox panel setup
 			d[i] = new JPanel();
 			d[i].setLayout(new BoxLayout(d[i],BoxLayout.X_AXIS));
 		}
 		pB.setLayout(new BoxLayout(pB,BoxLayout.Y_AXIS));
 		pD.setLayout(new BoxLayout(pD,BoxLayout.Y_AXIS));
+		dateActive.setLayout(new BoxLayout(dateActive,BoxLayout.Y_AXIS));
 		ButtonGroup prio = new ButtonGroup();
 		f.setLayout(new FlowLayout());
 
@@ -56,6 +66,7 @@ public class EditActionScreen {
 		JButton comment = new JButton(COMMENT);
 		JButton history = new JButton(HISTORY);
 		JButton print = new JButton(PRINT);
+		JLabel activeDateExplain = new JLabel("Item Activation");
 		for (int i=0;i<dates.length;i++) { //setting up dates[]
 			datesEnabled[i] = new JCheckBox();
 			if (a.getPDates()[i]==null) {
@@ -82,7 +93,23 @@ public class EditActionScreen {
 		comment.addActionListener(new ButtonListener());
 		history.addActionListener(new ButtonListener());
 		print.addActionListener(new ButtonListener());
-		
+		activeDate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					int[] ymd = parseString(activeDate.getText(),'-');
+
+					int locOfA = MainScreen.getToDos().indexOf(a);
+					MainScreen.setItem(locOfA,new InactiveItem(a,LocalDate.of(ymd[0], ymd[1], ymd[2])));
+					a = MainScreen.getToDos().get(locOfA);
+					PriorityEdit.hasValidDate = true;
+					showInactiveInfo();
+				} catch (DateTimeException ex) {
+					JOptionPane.showMessageDialog(f, "Not A Valid Date", "Error", JOptionPane.ERROR_MESSAGE);
+				} catch (NumberFormatException ex) {
+					JOptionPane.showMessageDialog(f, "Not A Valid Date", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
 		f.add(name); //adding components
 		for (int i=0;i<dates.length;i++) { //adding dates
 			d[i].add(datesEnabled[i]);
@@ -91,9 +118,18 @@ public class EditActionScreen {
 			dates[i].getDocument().addDocumentListener(new PDateEdit(i));
 			pD.add(d[i]);
 		}
+		dateActive.add(activeDateExplain);
+		dateActive.add(activeDate);
 		pD.add(comment); //adding buttons
 		pD.add(history);
 		pD.add(print);
+		pD.add(dateActive);
+		if (a instanceof InactiveItem) {
+			activeDate.setText(((InactiveItem)a).getDateActive().toString());
+		} else {
+			activeDate.setEnabled(false);
+		}
+		
 		
 		f.add(pB); //adding priority radiobutton panel
 		f.add(pD); //adding right panel
@@ -114,16 +150,51 @@ public class EditActionScreen {
 		f.setResizable(false);
 		f.setVisible(true);
 	}
+	private static void showInactiveInfo() {
+		if (a instanceof InactiveItem) {
+			activeDate.setText(((InactiveItem)a).getDateActive().toString());
+			activeDate.setEnabled(true);
+		}
+	}
 	private static class TextEdit implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			a.changeName(((JTextField) e.getSource()).getText());
 			MainScreen.updateList();
 		}
 	}
-	private static class PriorityEdit implements ActionListener { //called when the radiobuttons are pressed to change priority
+	private static class PriorityEdit implements ActionListener {//called when the radiobuttons are pressed to change priority
+		protected static boolean hasValidDate=false;
 		public void actionPerformed(ActionEvent e) {
 			String name = ((JRadioButton)e.getSource()).getText();
-			a.changePriority(Priority.toPriority(name));
+			if (name.equals(Priority.INACTIVE.toString())) {
+				while (!hasValidDate) {
+					JDialog getDate = new JDialog(f,"Enter a date",true);
+					JTextField enterDate = new JTextField("YYYY-MM-DD");
+					enterDate.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent x) {
+							try {
+								int[] ymd = parseString(enterDate.getText(),'-');
+								int locOfA = MainScreen.getToDos().indexOf(a);
+								MainScreen.setItem(locOfA,new InactiveItem(a,LocalDate.of(ymd[0], ymd[1], ymd[2])));
+								a = MainScreen.getToDos().get(locOfA);
+								PriorityEdit.hasValidDate = true;
+								getDate.dispose();
+								showInactiveInfo();
+							} catch (DateTimeException ex) {
+								JOptionPane.showMessageDialog(getDate, "Not A Valid Date", "Error", JOptionPane.ERROR_MESSAGE);
+							} catch (NumberFormatException ex) {
+								JOptionPane.showMessageDialog(getDate, "Not A Valid Date", "Error", JOptionPane.ERROR_MESSAGE);
+							}
+						}
+					});
+					getDate.add(enterDate);
+					getDate.pack();
+					getDate.setVisible(true);
+				}
+				hasValidDate = false;
+			} else {
+				a.changePriority(Priority.toPriority(name));
+			}
 			MainScreen.sortToDosByPriority();
 		}
 	}

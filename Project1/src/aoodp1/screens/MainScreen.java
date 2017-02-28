@@ -300,7 +300,13 @@ public class MainScreen {
 	public static Priority getDateOption() {
 		return dateOption;
 	}
-
+	public static void setItem(int index, ActionItem set) {
+		toDos.set(index, set);
+		updateList();
+	}
+	public static ArrayList<ActionItem> getToDos() {
+		return toDos;
+	}
 	private static class WindowManage extends WindowAdapter {
 		public void windowClosing(WindowEvent e) {
 			close();

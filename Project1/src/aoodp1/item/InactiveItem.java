@@ -5,12 +5,9 @@ import java.time.LocalDate;
 public class InactiveItem extends ActionItem{
 	private static final long serialVersionUID = -1808405248761724916L;
 	private LocalDate dateActive;
-	public InactiveItem(String name,LocalDate active) {
-		super(name,Priority.INACTIVE);
-		dateActive = active;
-	}
-	public InactiveItem(ActionItem oldItem) {
+	public InactiveItem(ActionItem oldItem,LocalDate active) {
 		super(oldItem.getName(),Priority.INACTIVE);
+		this.dateActive=active;
 		appendHistory(oldItem.getHistoryAsArray());
 		dates = oldItem.dates.clone();
 		comment = oldItem.comment;
@@ -25,6 +22,6 @@ public class InactiveItem extends ActionItem{
 		}
 	}
 	public String toString() {
-		return dateActive + " " + super.toString();
+		return dateActive + " | " + super.toString();
 	}
 }

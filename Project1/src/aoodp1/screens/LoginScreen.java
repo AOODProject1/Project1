@@ -47,6 +47,7 @@ public class LoginScreen {// extends JFrame{
 		p.add(password);
 		p.add(login);
 		login.addActionListener(new LoginButton(user, password));
+		f.setResizable(false);
 		f.pack();
 		f.setVisible(true);
 	}
