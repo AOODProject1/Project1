@@ -93,6 +93,9 @@ public class ActionItem implements Comparable<ActionItem>, Serializable {
 	public String[] getHistoryAsArray() {
 		return history.toArray(new String[0]);
 	}
+	public void changeHistory(int index, String newHistory) {
+		history.set(index, newHistory);
+	}
 	public String getDates() {
 		String out="Dates at which the priority will change:\n";
 		for (PriorityDate pd : dates) {

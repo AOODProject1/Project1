@@ -259,7 +259,7 @@ public class EditActionScreen {
 			JButton source = (JButton)e.getSource();
 			switch (source.getText()) {
 				case COMMENT:new CommentWindow().activate();break;
-				case HISTORY:JOptionPane.showMessageDialog(null, a.getHistory());break;
+				case HISTORY:new HistoryScreen().showCommentScreen(a);break;
 				case PRINT:System.out.println(a.getFullInfo());break;
 				default:
 			}
