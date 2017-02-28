@@ -55,6 +55,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import aoodp1.item.ActionItem;
 import aoodp1.item.CompletedItem;
+import aoodp1.item.InactiveItem;
 import aoodp1.item.Priority;
 import aoodp1.util.Constants;
 
@@ -331,6 +332,11 @@ public class MainScreen {
 			}
 			for (ActionItem a : toDos.toArray(new ActionItem[0])) {
 				a.validateDates();
+				if (a instanceof InactiveItem && a.getPriority()!=Priority.INACTIVE) {
+					int locOfA = MainScreen.getToDos().indexOf(a);
+					MainScreen.setItem(locOfA,new ActionItem((InactiveItem)a));
+					a = MainScreen.getToDos().get(locOfA);
+				}
 				sortToDosByPriority();
 			}
 		}

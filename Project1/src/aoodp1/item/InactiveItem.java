@@ -8,6 +8,7 @@ public class InactiveItem extends ActionItem{
 	public InactiveItem(ActionItem oldItem,LocalDate active) {
 		super(oldItem.getName(),Priority.INACTIVE);
 		this.dateActive=active;
+		oldItem.changePriority(Priority.INACTIVE);
 		appendHistory(oldItem.getHistoryAsArray());
 		dates = oldItem.dates.clone();
 		comment = oldItem.comment;

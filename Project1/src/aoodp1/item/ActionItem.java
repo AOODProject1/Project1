@@ -28,6 +28,15 @@ public class ActionItem implements Comparable<ActionItem>, Serializable {
 		history = new ArrayList<String>();
 		dates = new PriorityDate[3];
 	}
+	public ActionItem(InactiveItem a) {
+		this.name=a.name;
+		this.p=a.p;
+		history = new ArrayList<String>();
+		appendHistory(a.getHistoryAsArray());
+		addHistory("ActionItem made current due to date passing");
+		dates = a.dates.clone();
+		comment = a.comment;
+	}
 	public String getName() {
 		return name;
 	}
@@ -58,7 +67,7 @@ public class ActionItem implements Comparable<ActionItem>, Serializable {
 	}
 	public void appendHistory(String[] message) {
 		for (String h : message) {
-			history.add(h);
+				history.add(h);
 		}
 	}
 	public void changeName(String name) {
