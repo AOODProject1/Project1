@@ -394,6 +394,11 @@ public class MainScreen {
 							}
 						}
 					});
+					edit.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							EditActionScreen.editActionItem(toDos.get(items.getSelectedIndex()));
+						}
+					});
 					complete.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
 							toDos.get(selected).changePriority(Priority.COMPLETED);
@@ -402,7 +407,7 @@ public class MainScreen {
 					});
 					JPanel buttons = new JPanel();
 					buttons.add(delete);
-					//buttons.add(edit);
+					buttons.add(edit);
 					buttons.add(complete);
 					buttons.setLayout(new BoxLayout(buttons,BoxLayout.X_AXIS));
 					aiMenu.add(name);
