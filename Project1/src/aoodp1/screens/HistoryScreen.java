@@ -15,7 +15,6 @@ public class HistoryScreen extends JFrame {
 	private static JList<String> historyItems = new JList<String>();
 	public void showCommentScreen(ActionItem ai) {
 		historyItems.setListData(ai.getHistoryAsArray());
-		//historyItems.setListData(new String[] {"yr","a","gd","boi"});
 		historyItems.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
