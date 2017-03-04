@@ -70,11 +70,13 @@ public class MainScreen {
 	private static JList<ActionItem> items;
 	private static int compOption = Constants.SORTNOCARES;
 	private static Priority dateOption = Priority.URGENT;
-	private static boolean closedLoaded =false;
+	private static boolean closedLoaded =false,
+			firstLoad=false;
 
 	public static void main(String[] args) {
 		if (!new File(Constants.FILEHEADER).exists()) {
 				new File(Constants.FILEHEADER).mkdirs();
+				firstLoad=true;
 		}
 		show();
 	}
@@ -117,7 +119,7 @@ public class MainScreen {
 		f.setLayout(new FlowLayout());
 		JMenuBar bar = new JMenuBar();
 		f.setLayout(new BorderLayout());
-		mouseAdapter drag = new mouseAdapter();
+		MouseClickEditItem drag = new MouseClickEditItem();
 		items = new JList<ActionItem>(toDos.toArray(new ActionItem[0]));
 		items.addMouseListener(drag);
 		items.addMouseMotionListener(drag);
@@ -262,7 +264,8 @@ public class MainScreen {
 			ArrayList<CompletedItem> userToDo = (ArrayList<CompletedItem>)o.readObject();
 			completedToDos.addAll(userToDo);
 		} catch (FileNotFoundException x) {
-			JOptionPane.showMessageDialog(f, "File not found", "Error", JOptionPane.ERROR_MESSAGE);
+			if (!firstLoad)
+				JOptionPane.showMessageDialog(f, "File not found", "Error", JOptionPane.ERROR_MESSAGE);
 		} catch (IOException x) {
 			JOptionPane.showMessageDialog(f, "Items not found (IOException)", "Error", JOptionPane.ERROR_MESSAGE);
 		} catch (ClassNotFoundException x) {
@@ -320,6 +323,7 @@ public class MainScreen {
 				toDos = userToDo;
 				updateList();
 			} catch (FileNotFoundException x) {
+				if (!firstLoad)
 				JOptionPane.showMessageDialog(f, "File not found", "Error", JOptionPane.ERROR_MESSAGE);
 			} catch (IOException x) {
 				JOptionPane.showMessageDialog(f, "Items not found (IOException)", "Error", JOptionPane.ERROR_MESSAGE);
@@ -367,13 +371,10 @@ public class MainScreen {
 
 	}
 
-	private static class mouseAdapter extends MouseInputAdapter {
-		private boolean mouseDrag = false;
-		private int dragSourceIndex;
-
+	private static class MouseClickEditItem extends MouseInputAdapter {
 		@Override
 		public void mousePressed(MouseEvent e) {
-			dragSourceIndex = items.getSelectedIndex();
+			items.getSelectedIndex();
 		}
 
 		@Override
@@ -400,12 +401,15 @@ public class MainScreen {
 					edit.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
 							EditActionScreen.editActionItem(toDos.get(items.getSelectedIndex()));
+							aiMenu.dispose();
 						}
 					});
 					complete.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
 							toDos.get(selected).changePriority(Priority.COMPLETED);
-							sortToDosByPriority();
+							aiMenu.dispose();
+							cleanToDos();
+							updateList();
 						}
 					});
 					JPanel buttons = new JPanel();
@@ -415,7 +419,7 @@ public class MainScreen {
 					buttons.setLayout(new BoxLayout(buttons,BoxLayout.X_AXIS));
 					aiMenu.add(name);
 					aiMenu.add(buttons);
-					aiMenu.setLayout(new BoxLayout(aiMenu.getContentPane(), BoxLayout.X_AXIS));
+					aiMenu.setLayout(new BoxLayout(aiMenu.getContentPane(), BoxLayout.Y_AXIS));
 					aiMenu.pack();
 					aiMenu.setVisible(true);
 				} else if (e.getClickCount() == 2) {
