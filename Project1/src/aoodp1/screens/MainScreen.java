@@ -66,17 +66,16 @@ public class MainScreen {
 
 	private static ArrayList<ActionItem> toDos = new ArrayList<ActionItem>();
 	private static ArrayList<CompletedItem> completedToDos = new ArrayList<CompletedItem>();
-	private static File whereToSave = null,completedSave=null;
+	private static File whereToSave = null, completedSave = null;
 	private static JList<ActionItem> items;
 	private static int compOption = Constants.SORTNOCARES;
 	private static Priority dateOption = Priority.URGENT;
-	private static boolean closedLoaded =false,
-			firstLoad=false;
+	private static boolean closedLoaded = false, firstLoad = false;
 
 	public static void main(String[] args) {
 		if (!new File(Constants.FILEHEADER).exists()) {
-				new File(Constants.FILEHEADER).mkdirs();
-				firstLoad=true;
+			new File(Constants.FILEHEADER).mkdirs();
+			firstLoad = true;
 		}
 		show();
 	}
@@ -98,8 +97,7 @@ public class MainScreen {
 				public void actionPerformed(ActionEvent e) {
 					compOption = Constants.SORTBYDATE;
 					dateOption = Priority.toPriority((((JMenuItem) e.getSource()).getText()));
-					// changes dateOption to the priority on the JMenuItems'
-					// name
+					// changes dateOption to the priority on the JMenuItems' name
 					sortToDos();
 				}
 			});
@@ -138,36 +136,34 @@ public class MainScreen {
 		saveAs.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser getSaveFile = new JFileChooser(Constants.FILEHEADER);
-				//getSaveFile.addChoosableFileFilter(new FileNameExtensionFilter("ToDoList file",".tdl"));
 				if (getSaveFile.showSaveDialog(f) == JFileChooser.APPROVE_OPTION) {
 					File saveLoc;
 					if (getSaveFile.getSelectedFile().getAbsolutePath().endsWith(".tdl")) {
 						saveLoc = getSaveFile.getSelectedFile();
 					} else {
-						saveLoc = new File(getSaveFile.getSelectedFile().getAbsolutePath() +".tdl");
+						saveLoc = new File(getSaveFile.getSelectedFile().getAbsolutePath() + ".tdl");
 					}
 					saveLoc.getParentFile().mkdirs();
-					try (ObjectOutputStream p = new ObjectOutputStream(new FileOutputStream(saveLoc))){
+					try (ObjectOutputStream p = new ObjectOutputStream(new FileOutputStream(saveLoc))) {
 						saveLoc.createNewFile();
 						p.writeObject(toDos);
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
 				}
-				//bring up a menu to select file
-				//save file at selected place
+				// bring up a menu to select file
+				// save file at selected place
 			}
 		});
 		load.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser getLoadFile = new JFileChooser(Constants.FILEHEADER);
-				//getLoadFile.addChoosableFileFilter(new FileNameExtensionFilter("ToDoList file",".tdl"));
 				if (getLoadFile.showOpenDialog(f) == JFileChooser.APPROVE_OPTION) {
 					File saveLoc = new File(getLoadFile.getSelectedFile().getAbsolutePath());
 					saveLoc.getParentFile().mkdirs();
-					try (ObjectInputStream p = new ObjectInputStream(new FileInputStream(saveLoc))){
+					try (ObjectInputStream p = new ObjectInputStream(new FileInputStream(saveLoc))) {
 						saveLoc.createNewFile();
-						toDos = ((ArrayList<ActionItem>)(p.readObject()));
+						toDos = ((ArrayList<ActionItem>) (p.readObject()));
 						updateList();
 					} catch (IOException e1) {
 						e1.printStackTrace();
@@ -175,7 +171,7 @@ public class MainScreen {
 						e1.printStackTrace();
 					}
 				}
-				//set to-dos as a file chosen by user
+				// set to-dos as a file chosen by user
 			}
 		});
 		print.addActionListener(new ActionListener() {
@@ -191,13 +187,14 @@ public class MainScreen {
 			public void actionPerformed(ActionEvent e) {
 				if (!closedLoaded) {
 					loadClosedActionItems();
-					closedLoaded=true;
+					closedLoaded = true;
 				}
 				String items = null;
 				for (ActionItem a : completedToDos) {
-					if (a==null) continue;
+					if (a == null)
+						continue;
 					if (items == null) {
-						items=a.toString()+"\n";
+						items = a.toString() + "\n";
 					} else {
 						items += a + "\n";
 					}
@@ -218,7 +215,8 @@ public class MainScreen {
 				}
 			}
 		});
-		newInputItem.addMouseListener(new MouseAdapter() { // Clears text field when clicked
+		newInputItem.addMouseListener(new MouseAdapter() { // Clears text field
+															// when clicked
 			public void mousePressed(MouseEvent e) {
 				((JTextField) e.getSource()).setText(null);
 			}
@@ -248,20 +246,22 @@ public class MainScreen {
 	public static void updateList() {
 		items.setListData(toDos.toArray(new ActionItem[0]));
 	}
+
 	/**
 	 * Removes any items marked completed and puts them in completedToDos.
 	 */
 	public static void cleanToDos() {
-		for (int i=0;i<toDos.size();i++) {
+		for (int i = 0; i < toDos.size(); i++) {
 			if (toDos.get(i).getPriority() == Priority.COMPLETED) {
-				completedToDos.add(0,new CompletedItem(toDos.remove(i),LocalDate.now()));
+				completedToDos.add(0, new CompletedItem(toDos.remove(i), LocalDate.now()));
 				i--;
 			}
 		}
 	}
+
 	public static void loadClosedActionItems() {
 		try (ObjectInputStream o = new ObjectInputStream(new FileInputStream(completedSave))) {
-			ArrayList<CompletedItem> userToDo = (ArrayList<CompletedItem>)o.readObject();
+			ArrayList<CompletedItem> userToDo = (ArrayList<CompletedItem>) o.readObject();
 			completedToDos.addAll(userToDo);
 		} catch (FileNotFoundException x) {
 			if (!firstLoad)
@@ -269,13 +269,16 @@ public class MainScreen {
 		} catch (IOException x) {
 			JOptionPane.showMessageDialog(f, "Items not found (IOException)", "Error", JOptionPane.ERROR_MESSAGE);
 		} catch (ClassNotFoundException x) {
-			JOptionPane.showMessageDialog(f, "File Blank/Corrupted (ClassNotFoundException)", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(f, "File Blank/Corrupted (ClassNotFoundException)", "Error",
+					JOptionPane.ERROR_MESSAGE);
 		} catch (ClassCastException x) {
-			JOptionPane.showMessageDialog(f, "File Blank/Corrupted (ClassCastException)", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(f, "File Blank/Corrupted (ClassCastException)", "Error",
+					JOptionPane.ERROR_MESSAGE);
 		} catch (Exception x) {
 			JOptionPane.showMessageDialog(f, "Unexpected Error", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
+
 	private static void close() {
 		int confirm = JOptionPane.showConfirmDialog(f, "Are you sure you want to quit?", "Confirm Quit",
 				JOptionPane.YES_NO_OPTION);
@@ -284,7 +287,7 @@ public class MainScreen {
 		if (whereToSave == null)
 			System.exit(0);
 		try (ObjectOutputStream p = new ObjectOutputStream(new FileOutputStream(whereToSave));
-			 ObjectOutputStream c = new ObjectOutputStream(new FileOutputStream(completedSave))){
+				ObjectOutputStream c = new ObjectOutputStream(new FileOutputStream(completedSave))) {
 			whereToSave.getParentFile().mkdirs();
 			whereToSave.createNewFile();
 			completedSave.createNewFile();
@@ -304,13 +307,16 @@ public class MainScreen {
 	public static Priority getDateOption() {
 		return dateOption;
 	}
+
 	public static void setItem(int index, ActionItem set) {
 		toDos.set(index, set);
 		updateList();
 	}
+
 	public static ArrayList<ActionItem> getToDos() {
 		return toDos;
 	}
+
 	private static class WindowManage extends WindowAdapter {
 		public void windowClosing(WindowEvent e) {
 			close();
@@ -319,26 +325,28 @@ public class MainScreen {
 		public void windowOpened(WindowEvent e) {
 			File userdir = new File(Constants.FILEHEADER + "ListData.tdl");
 			try (ObjectInputStream o = new ObjectInputStream(new FileInputStream(userdir))) {
-				ArrayList<ActionItem> userToDo = (ArrayList<ActionItem>)o.readObject();
+				ArrayList<ActionItem> userToDo = (ArrayList<ActionItem>) o.readObject();
 				toDos = userToDo;
 				updateList();
 			} catch (FileNotFoundException x) {
 				if (!firstLoad)
-				JOptionPane.showMessageDialog(f, "File not found", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(f, "File not found", "Error", JOptionPane.ERROR_MESSAGE);
 			} catch (IOException x) {
 				JOptionPane.showMessageDialog(f, "Items not found (IOException)", "Error", JOptionPane.ERROR_MESSAGE);
 			} catch (ClassNotFoundException x) {
-				JOptionPane.showMessageDialog(f, "File Blank/Corrupted (ClassNotFoundException)", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(f, "File Blank/Corrupted (ClassNotFoundException)", "Error",
+						JOptionPane.ERROR_MESSAGE);
 			} catch (ClassCastException x) {
-				JOptionPane.showMessageDialog(f, "File Blank/Corrupted (ClassCastException)", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(f, "File Blank/Corrupted (ClassCastException)", "Error",
+						JOptionPane.ERROR_MESSAGE);
 			} catch (Exception x) {
 				JOptionPane.showMessageDialog(f, "Unexpected Error", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 			for (ActionItem a : toDos.toArray(new ActionItem[0])) {
 				a.validateDates();
-				if (a instanceof InactiveItem && a.getPriority()!=Priority.INACTIVE) {
+				if (a instanceof InactiveItem && a.getPriority() != Priority.INACTIVE) {
 					int locOfA = MainScreen.getToDos().indexOf(a);
-					MainScreen.setItem(locOfA,new ActionItem((InactiveItem)a));
+					MainScreen.setItem(locOfA, new ActionItem((InactiveItem) a));
 					a = MainScreen.getToDos().get(locOfA);
 				}
 				sortToDosByPriority();
@@ -381,9 +389,12 @@ public class MainScreen {
 		public void mouseClicked(MouseEvent e) {
 			if (items.contains(e.getPoint())) {
 				if (e.getButton() == MouseEvent.BUTTON3) {
-					((JList)e.getSource()).setSelectedIndex(((JList)e.getSource()).locationToIndex(e.getPoint())); //select right-click point
+					((JList) e.getSource()).setSelectedIndex(((JList) e.getSource()).locationToIndex(e.getPoint())); // select
+																														// right-click
+																														// point
 					JDialog aiMenu = new JDialog();
-					int selected = items.getSelectedIndex(); //so that user can't change selected index
+					int selected = items.getSelectedIndex(); 
+						// so that user can't change selected index
 					aiMenu.setTitle("Action Item Options");
 					JLabel name = new JLabel("ActionItem: " + toDos.get(selected).toString());
 					JButton delete = new JButton("Delete Action Item");
@@ -391,7 +402,8 @@ public class MainScreen {
 					JButton complete = new JButton("Set to Completed");
 					delete.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							if (JOptionPane.showConfirmDialog(aiMenu, "Are you sure?", "Confirmation of Deletion", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+							if (JOptionPane.showConfirmDialog(aiMenu, "Are you sure?", "Confirmation of Deletion",
+									JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 								toDos.remove(items.getSelectedIndex());
 								updateList();
 								aiMenu.dispose();
@@ -416,7 +428,7 @@ public class MainScreen {
 					buttons.add(delete);
 					buttons.add(edit);
 					buttons.add(complete);
-					buttons.setLayout(new BoxLayout(buttons,BoxLayout.X_AXIS));
+					buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
 					aiMenu.add(name);
 					aiMenu.add(buttons);
 					aiMenu.setLayout(new BoxLayout(aiMenu.getContentPane(), BoxLayout.Y_AXIS));
@@ -477,16 +489,17 @@ public class MainScreen {
 				e.printStackTrace();
 			}
 			JList.DropLocation dl = (JList.DropLocation) support.getDropLocation();
-			
+
 			int sIndex = Integer.parseInt(indexString);
 			int eIndex = dl.getIndex();
-			int moveIndex = sIndex>=eIndex?eIndex:eIndex-1;
+			int moveIndex = sIndex >= eIndex ? eIndex : eIndex - 1;
 			ActionItem moved = toDos.remove(sIndex);
 			toDos.add(moveIndex, moved);
-			//change priority as necessary
+			// change priority as necessary
 			if (toDos.get(moveIndex).getPriority().ordinal() < toDos.get(moveIndex - 1).getPriority().ordinal()) {
 				toDos.get(moveIndex).changePriority(toDos.get(moveIndex - 1).getPriority());
-			} else if (toDos.get(moveIndex).getPriority().ordinal() > toDos.get(moveIndex + 1).getPriority().ordinal()) {
+			} else if (toDos.get(moveIndex).getPriority().ordinal() > 
+					toDos.get(moveIndex + 1).getPriority().ordinal()) {
 				toDos.get(moveIndex).changePriority(toDos.get(moveIndex + 1).getPriority());
 			}
 			updateList();

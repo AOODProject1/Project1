@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import aoodp1.item.ActionItem;
+
 /**
  * Screen where history comments can be edited
  *
@@ -13,13 +14,15 @@ import aoodp1.item.ActionItem;
 public class HistoryScreen extends JFrame {
 	private static final long serialVersionUID = 6086501999008126333L;
 	private static JList<String> historyItems = new JList<String>();
+
 	public void showCommentScreen(ActionItem ai) {
 		historyItems.setListData(ai.getHistoryAsArray());
 		historyItems.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
 					int selected = historyItems.getSelectedIndex();
-					String newComment = JOptionPane.showInputDialog(historyItems, "Input a new Comment", historyItems.getSelectedValue());
+					String newComment = JOptionPane.showInputDialog(historyItems, "Input a new Comment",
+							historyItems.getSelectedValue());
 					ai.changeHistory(selected, newComment);
 					historyItems.setListData(ai.getHistoryAsArray());
 				}

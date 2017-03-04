@@ -30,36 +30,39 @@ import aoodp1.item.InactiveItem;
 import aoodp1.item.Priority;
 
 public class EditActionScreen {
-	private static final String COMMENT="Comment",HISTORY="History",PRINT="Print to Console";
+	private static final String COMMENT = "Comment", HISTORY = "History", PRINT = "Print to Console";
 	private static ActionItem a;
 	private static JTextField[] dates;
 	private static JFrame f;
-	private static JPanel pD=new JPanel(), //The dates and checkboxes and buttons
-			dateActive=new JPanel();
+	private static JPanel pD = new JPanel(), // The dates and checkboxes and buttons
+			dateActive = new JPanel();
 	private static JTextField activeDate = new JTextField("YYYY-MM-DD");
+
 	public static void main(String[] args) {
-		editActionItem(new ActionItem("лю",Priority.CURRENT));
+		editActionItem(new ActionItem("лю", Priority.CURRENT));
 	}
+
 	public static void editActionItem(ActionItem ai) {
 		f = new JFrame("Edit Item");
 		pD = new JPanel();
 		dateActive = new JPanel();
 		activeDate = new JTextField("YYYY-MM-DD");
-		if (ai == null) return;
-		a=ai;
-		JPanel pB = new JPanel(); //The radio buttons for priorities
-		JPanel[] d = new JPanel[3]; //the date/checkbox combos
-		for (int i=0;i<d.length;i++) { //date/checkbox panel setup
+		if (ai == null)
+			return;
+		a = ai;
+		JPanel pB = new JPanel(); // The radio buttons for priorities
+		JPanel[] d = new JPanel[3]; // the date/checkbox combos
+		for (int i = 0; i < d.length; i++) { // date/checkbox panel setup
 			d[i] = new JPanel();
-			d[i].setLayout(new BoxLayout(d[i],BoxLayout.X_AXIS));
+			d[i].setLayout(new BoxLayout(d[i], BoxLayout.X_AXIS));
 		}
-		pB.setLayout(new BoxLayout(pB,BoxLayout.Y_AXIS));
-		pD.setLayout(new BoxLayout(pD,BoxLayout.Y_AXIS));
-		dateActive.setLayout(new BoxLayout(dateActive,BoxLayout.Y_AXIS));
+		pB.setLayout(new BoxLayout(pB, BoxLayout.Y_AXIS));
+		pD.setLayout(new BoxLayout(pD, BoxLayout.Y_AXIS));
+		dateActive.setLayout(new BoxLayout(dateActive, BoxLayout.Y_AXIS));
 		ButtonGroup prio = new ButtonGroup();
 		f.setLayout(new FlowLayout());
 
-		JTextField name = new JTextField(a.getName(),30); //Component setup/initialization
+		JTextField name = new JTextField(a.getName(), 30); // Component setup/initialization
 		JRadioButton[] p = new JRadioButton[5];
 		dates = new JTextField[3];
 		JCheckBox[] datesEnabled = new JCheckBox[3];
@@ -67,9 +70,9 @@ public class EditActionScreen {
 		JButton history = new JButton(HISTORY);
 		JButton print = new JButton(PRINT);
 		JLabel activeDateExplain = new JLabel("Item Activation");
-		for (int i=0;i<dates.length;i++) { //setting up dates[]
+		for (int i = 0; i < dates.length; i++) { // setting up dates[]
 			datesEnabled[i] = new JCheckBox();
-			if (a.getPDates()[i]==null) {
+			if (a.getPDates()[i] == null) {
 				dates[i] = new JTextField("YYYY-MM-DD");
 				dates[i].setEnabled(false);
 			} else {
@@ -78,17 +81,17 @@ public class EditActionScreen {
 				datesEnabled[i].setSelected(true);
 			}
 		}
-		for (int i=0;i<p.length;i++) { //setting up radio buttons
+		for (int i = 0; i < p.length; i++) { // setting up radio buttons
 			p[i] = new JRadioButton(Priority.values()[i].toString());
 			prio.add(p[i]);
 		}
-		if (a.getPriority()!=null)
+		if (a.getPriority() != null)
 			p[a.getPriority().ordinal()].setSelected(true);
-		
-		name.addActionListener(new TextEdit()); //adding listeners
+
+		name.addActionListener(new TextEdit()); // adding listeners
 		for (JRadioButton r : p) {
 			r.addActionListener(new PriorityEdit());
-			pB.add(r); //adding radiobuttons
+			pB.add(r); // adding radiobuttons
 		}
 		comment.addActionListener(new ButtonListener());
 		history.addActionListener(new ButtonListener());
@@ -96,10 +99,10 @@ public class EditActionScreen {
 		activeDate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					int[] ymd = parseString(activeDate.getText(),'-');
+					int[] ymd = parseString(activeDate.getText(), '-');
 
 					int locOfA = MainScreen.getToDos().indexOf(a);
-					MainScreen.setItem(locOfA,new InactiveItem(a,LocalDate.of(ymd[0], ymd[1], ymd[2])));
+					MainScreen.setItem(locOfA, new InactiveItem(a, LocalDate.of(ymd[0], ymd[1], ymd[2])));
 					a = MainScreen.getToDos().get(locOfA);
 					PriorityEdit.hasValidDate = true;
 					showInactiveInfo();
@@ -110,8 +113,8 @@ public class EditActionScreen {
 				}
 			}
 		});
-		f.add(name); //adding components
-		for (int i=0;i<dates.length;i++) { //adding dates
+		f.add(name); // adding components
+		for (int i = 0; i < dates.length; i++) { // adding dates
 			d[i].add(datesEnabled[i]);
 			d[i].add(dates[i]);
 			datesEnabled[i].addActionListener(new PDateCBox(i));
@@ -120,21 +123,20 @@ public class EditActionScreen {
 		}
 		dateActive.add(activeDateExplain);
 		dateActive.add(activeDate);
-		pD.add(comment); //adding buttons
+		pD.add(comment); // adding buttons
 		pD.add(history);
 		pD.add(print);
 		pD.add(dateActive);
 		if (a instanceof InactiveItem) {
-			activeDate.setText(((InactiveItem)a).getDateActive().toString());
+			activeDate.setText(((InactiveItem) a).getDateActive().toString());
 		} else {
 			activeDate.setEnabled(false);
 		}
-		
-		
-		f.add(pB); //adding priority radiobutton panel
-		f.add(pD); //adding right panel
-		
-		f.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); //setting the frame's properties
+
+		f.add(pB); // adding priority radiobutton panel
+		f.add(pD); // adding right panel
+
+		f.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // setting the frame's properties
 		f.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				try {
@@ -146,44 +148,52 @@ public class EditActionScreen {
 				f.dispose();
 			}
 		});
-		f.setSize(new Dimension(375,250));
+		f.setSize(new Dimension(375, 250));
 		f.setResizable(false);
 		f.setVisible(true);
 	}
+
 	private static void showInactiveInfo() {
 		if (a instanceof InactiveItem) {
-			activeDate.setText(((InactiveItem)a).getDateActive().toString());
+			activeDate.setText(((InactiveItem) a).getDateActive().toString());
 			activeDate.setEnabled(true);
 		}
 	}
+
 	private static class TextEdit implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			a.changeName(((JTextField) e.getSource()).getText());
 			MainScreen.updateList();
 		}
 	}
-	private static class PriorityEdit implements ActionListener {//called when the radiobuttons are pressed to change priority
-		protected static boolean hasValidDate=false;
+	/*
+	 * called when radiobuttons are pressed to change priority
+	 */
+	private static class PriorityEdit implements ActionListener {
+		protected static boolean hasValidDate = false;
+
 		public void actionPerformed(ActionEvent e) {
-			String name = ((JRadioButton)e.getSource()).getText();
+			String name = ((JRadioButton) e.getSource()).getText();
 			if (name.equals(Priority.INACTIVE.toString())) {
 				while (!hasValidDate) {
-					JDialog getDate = new JDialog(f,"Enter a date",true);
+					JDialog getDate = new JDialog(f, "Enter a date", true);
 					JTextField enterDate = new JTextField("YYYY-MM-DD");
 					enterDate.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent x) {
 							try {
-								int[] ymd = parseString(enterDate.getText(),'-');
+								int[] ymd = parseString(enterDate.getText(), '-');
 								int locOfA = MainScreen.getToDos().indexOf(a);
-								MainScreen.setItem(locOfA,new InactiveItem(a,LocalDate.of(ymd[0], ymd[1], ymd[2])));
+								MainScreen.setItem(locOfA, new InactiveItem(a, LocalDate.of(ymd[0], ymd[1], ymd[2])));
 								a = MainScreen.getToDos().get(locOfA);
 								PriorityEdit.hasValidDate = true;
 								getDate.dispose();
 								showInactiveInfo();
 							} catch (DateTimeException ex) {
-								JOptionPane.showMessageDialog(getDate, "Not A Valid Date", "Error", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(getDate, "Not A Valid Date", "Error",
+										JOptionPane.ERROR_MESSAGE);
 							} catch (NumberFormatException ex) {
-								JOptionPane.showMessageDialog(getDate, "Not A Valid Date", "Error", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(getDate, "Not A Valid Date", "Error",
+										JOptionPane.ERROR_MESSAGE);
 							}
 						}
 					});
@@ -198,96 +208,130 @@ public class EditActionScreen {
 			MainScreen.sortToDosByPriority();
 		}
 	}
+
 	private static class PDateCBox implements ActionListener {
 		private int index;
+
 		public PDateCBox(int index) {
-			this.index=index;
+			this.index = index;
 		}
+
 		public void actionPerformed(ActionEvent e) {
-			if (((JCheckBox)e.getSource()).isSelected())
-			dates[index].setEnabled(true);
-			else dates[index].setEnabled(false);
+			if (((JCheckBox) e.getSource()).isSelected())
+				dates[index].setEnabled(true);
+			else
+				dates[index].setEnabled(false);
 		}
 	}
+
 	private static class PDateEdit implements DocumentListener {
 		private int index;
+
 		public PDateEdit(int index) {
-			this.index=index;
+			this.index = index;
 		}
+
 		public void textValueChanged() {
 			try {
 				String messageText = dates[index].getText().trim();
-				int[] dmy = parseString(messageText,'-');
-				if ((dmy[0]+"").length()<4) return; //only 4-digit years
-				LocalDate d = LocalDate.of(dmy[0], dmy[1], dmy[2]); //YYYY-MM-DD - format for dates
+				int[] dmy = parseString(messageText, '-');
+				if ((dmy[0] + "").length() < 4)
+					return; // only 4-digit years
+				LocalDate d = LocalDate.of(dmy[0], dmy[1], dmy[2]); // YYYY-MM-DD - format for dates
 				a.changePriorityDate(d, Priority.values()[index]);
 				a.validateDates();
 			} catch (ClassCastException e2) {
 				System.err.println(e2.toString());
-			} catch (Exception e2) {}
+			} catch (Exception e2) {
+			}
 		}
-		public void changedUpdate(DocumentEvent arg0) {textValueChanged();}
-		public void insertUpdate(DocumentEvent arg0) {textValueChanged();}
-		public void removeUpdate(DocumentEvent arg0) {textValueChanged();}
+
+		public void changedUpdate(DocumentEvent arg0) {
+			textValueChanged();
+		}
+
+		public void insertUpdate(DocumentEvent arg0) {
+			textValueChanged();
+		}
+
+		public void removeUpdate(DocumentEvent arg0) {
+			textValueChanged();
+		}
 	}
+
 	/**
-	 * Parses a string into a bunch of ints (Example: {@code parseString("04/42/25",'/')} would return {@code "0,42,25"}
-	 * @param toParse the string
-	 * @param parseFor the character separator to search for
+	 * Parses a string into a bunch of ints (Example:
+	 * {@code parseString("04/42/25",'/')} would return {@code "0,42,25"}
+	 * 
+	 * @param toParse
+	 *            the string
+	 * @param parseFor
+	 *            the character separator to search for
 	 * @return
 	 */
 	private static int[] parseString(String toParse, char parseFor) {
 		ArrayList<Integer> numbers = new ArrayList<Integer>();
-		int lastChar=0;
-		for (int c=0;c<toParse.length();c++) {
+		int lastChar = 0;
+		for (int c = 0; c < toParse.length(); c++) {
 			if (toParse.charAt(c) == parseFor) {
 				numbers.add(Integer.parseInt(toParse.substring(lastChar, c)));
-				lastChar=c+1;
+				lastChar = c + 1;
 			}
 		}
 		numbers.add(Integer.parseInt(toParse.substring(lastChar)));
 		int[] n2 = new int[numbers.size()];
-		int index=0;
+		int index = 0;
 		for (Integer i : numbers) {
 			n2[index] = i;
 			index++;
 		}
 		return n2;
 	}
+
 	private static class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			JButton source = (JButton)e.getSource();
+			JButton source = (JButton) e.getSource();
 			switch (source.getText()) {
-				case COMMENT:new CommentWindow().activate();break;
-				case HISTORY:new HistoryScreen().showCommentScreen(a);break;
-				case PRINT:System.out.println(a.getFullInfo());break;
-				default:
+			case COMMENT:
+				new CommentWindow().activate();
+				break;
+			case HISTORY:
+				new HistoryScreen().showCommentScreen(a);
+				break;
+			case PRINT:
+				System.out.println(a.getFullInfo());
+				break;
+			default:
 			}
 		}
 	}
+
 	/**
 	 * The window activated by pressing the "comment" button
 	 *
 	 */
 	private static class CommentWindow extends JFrame {
 		private static final long serialVersionUID = 3246864078201652807L;
+
 		public void activate() {
-			JTextArea window = new JTextArea(15,45);
+			JTextArea window = new JTextArea(15, 45);
 			window.setText(a.getComment());
 			setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 			JPanel buttons = new JPanel();
-			JButton commit=new JButton("Commit");
+			JButton commit = new JButton("Commit");
 			JButton clear = new JButton("Clear");
-			
+
 			commit.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					a.changeComment(window.getText());
 					close();
-				}});
+				}
+			});
 			clear.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					window.setText(null);
-				}});
+				}
+			});
 			buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
 			buttons.add(commit);
 			buttons.add(clear);
@@ -296,6 +340,7 @@ public class EditActionScreen {
 			pack();
 			setVisible(true);
 		}
+
 		private void close() {
 			dispose();
 		}
