@@ -29,9 +29,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Scanner;
 
 import javax.swing.BoxLayout;
 import javax.swing.DropMode;
@@ -65,20 +67,21 @@ public class MainScreen {
 	private static ArrayList<ActionItem> toDos = new ArrayList<ActionItem>();
 	private static ArrayList<CompletedItem> completedToDos = new ArrayList<CompletedItem>();
 	private static File whereToSave = null,completedSave=null;
-	private static String username;
 	private static JList<ActionItem> items;
 	private static int compOption = Constants.SORTNOCARES;
 	private static Priority dateOption = Priority.URGENT;
 	private static boolean closedLoaded =false;
 
 	public static void main(String[] args) {
-		show("default");
+		if (!new File(Constants.FILEHEADER).exists()) {
+				new File(Constants.FILEHEADER).mkdirs();
+		}
+		show();
 	}
 
-	public static void show(String user) {
-		username = user;
-		whereToSave = new File(Constants.FILEHEADER + username + "/ListData.tdl");
-		completedSave = new File(Constants.FILEHEADER + username + "/Completed.ctdl");
+	public static void show() {
+		whereToSave = new File(Constants.FILEHEADER + "ListData.tdl");
+		completedSave = new File(Constants.FILEHEADER + "Completed.ctdl");
 		JMenuItem save = new JMenuItem("Save");
 		JMenuItem saveAs = new JMenuItem("Save As...");
 		JMenuItem load = new JMenuItem("Load from File");
@@ -311,7 +314,7 @@ public class MainScreen {
 		}
 
 		public void windowOpened(WindowEvent e) {
-			File userdir = new File(Constants.FILEHEADER + username + "/ListData.tdl");
+			File userdir = new File(Constants.FILEHEADER + "ListData.tdl");
 			try (ObjectInputStream o = new ObjectInputStream(new FileInputStream(userdir))) {
 				ArrayList<ActionItem> userToDo = (ArrayList<ActionItem>)o.readObject();
 				toDos = userToDo;

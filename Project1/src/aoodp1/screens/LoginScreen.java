@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import aoodp1.util.Constants;
-
+@Deprecated
 public class LoginScreen {// extends JFrame{
 	private static JFrame f = new JFrame("Login Screen");
 	private static JPanel p;
@@ -64,7 +64,7 @@ public class LoginScreen {// extends JFrame{
 			if (new File(Constants.FILEHEADER + user.getText() + "/").exists()) {
 				try (Scanner s = new Scanner(new File(Constants.FILEHEADER + user.getText() + "/password.txt"))){
 					if (password.getText().equals(s.nextLine())) {
-						MainScreen.show(user.getText());
+						MainScreen.show();//user.getText());
 						f.dispose();
 					}
 				} catch (FileNotFoundException e1) {
@@ -81,7 +81,7 @@ public class LoginScreen {// extends JFrame{
 					} catch (FileNotFoundException x) {
 						System.err.println(x.getLocalizedMessage());
 					}
-					MainScreen.show(user.getText());
+					MainScreen.show();//user.getText());
 					f.dispose();
 				}
 			}
